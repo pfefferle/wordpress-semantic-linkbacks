@@ -3,31 +3,22 @@ require_once "Mf2/Parser.php";
 
 use Mf2\Parser;
 
+add_action('init', array( 'SemanticLinkbacksPlugin_MicroformatsHandler', 'init' ));
+
 /**
- * @author Matthias Pfefferle
- *
- * provides a microformats handler for the "semantic linkbacks"
+ * provides a microformats handler for the semantic linkbacks
  * WordPress plugin
+ *
+ * @author Matthias Pfefferle
  */
 class SemanticLinkbacksPlugin_MicroformatsHandler {
-  // the type of the linkback
-  private $type = "mention";
-
   /**
-   * constructor
+   * initialize the plugin, registering WordPess hooks.
    */
-  public function __construct() {
-    add_action('init', array( $this, 'init' ));
-  }
-
-  /**
-   * Initialize the plugin, registering WordPess hooks.
-   */
-  public function init() {
+  public static function init() {
     //
-    add_filter('semantic_linkbacks_commentdata', array( $this, 'generate_commentdata' ), 1, 4);
-    add_filter('get_avatar', array( $this, 'get_avatar'), 11, 5);
-    add_filter('get_avatar_comment_types', array( $this, 'get_avatar_comment_types'));
+    add_filter('semantic_linkbacks_commentdata', array( 'SemanticLinkbacksPlugin_MicroformatsHandler', 'generate_commentdata' ), 1, 4);
+    add_filter('get_avatar', array( 'SemanticLinkbacksPlugin_MicroformatsHandler', 'get_avatar'), 11, 5);
   }
 
   /**
@@ -35,7 +26,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
    *
    * @return array
    */
-  public function get_class_mapper() {
+  public static function get_class_mapper() {
     $class_mapper = array();
 
     /*
@@ -61,6 +52,13 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     $class_mapper["like-of"]     = "like";
 
     /*
+     * favorite
+     * @link http://indiewebcamp.com/favorite
+     */
+    $class_mapper["favorite"]    = "favorite";
+    $class_mapper["favorite-of"] = "favorite";
+
+    /*
      * mentions
      * @link http://indiewebcamp.com/mentions
      */
@@ -74,16 +72,27 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
    *
    * @return array
    */
-  public function get_rel_mapper() {
+  public static function get_rel_mapper() {
     $rel_mapper = array();
+
+    /*
+     * replies
+     * @link http://indiewebcamp.com/in-reply-to
+     */
+    $rel_mapper["in-reply-to"] = "reply";
+    $rel_mapper["reply-of"]    = "reply";
 
     return apply_filters("semantic_linkbacks_microformats_rel_mapper", $rel_mapper);
   }
 
   /**
+   * generate the comment data from the microformatted content
    *
+   * @param WP_Comment $commentdata the comment object
+   * @param string $target the target url
+   * @param string $html the parsed html
    */
-  public function generate_commentdata($commentdata, $target, $html) {
+  public static function generate_commentdata($commentdata, $target, $html) {
     global $wpdb;
 
     // parse source html
@@ -91,21 +100,23 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     $mf_array = $parser->parse(true);
 
     // get all "relevant" entries
-    $entries = $this->get_entries($mf_array);
+    $entries = self::get_entries($mf_array);
 
-    // check if there are any entries
     if (empty($entries)) {
       return array();
     }
 
     // get the entry of interest
-    $entry = $this->get_representative_entry($entries, $target);
+    $entry = self::get_representative_entry($entries, $target);
 
-    // check if there is a representative entry
     if (empty($entry)) {
       return array();
     }
 
+    // add source
+    $source = $canonical = $commentdata['comment_author_url'];
+
+    // the entry properties
     $properties = $entry['properties'];
 
     // try to find some content
@@ -121,10 +132,10 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     // set the right date
     if (isset($properties['published'])) {
       $time = strtotime($properties['published'][0]);
-      $commentdata['comment_date'] = date("Y-m-d H:i:s", $time);
+      $commentdata['comment_date'] = get_date_from_gmt( date("Y-m-d H:i:s", $time), 'Y-m-d H:i:s' );
     } elseif (isset($properties['updated'])) {
       $time = strtotime($properties['updated'][0]);
-      $commentdata['comment_date'] = date("Y-m-d H:i:s", $time);
+      $commentdata['comment_date'] = get_date_from_gmt( date("Y-m-d H:i:s", $time), 'Y-m-d H:i:s' );
     }
 
     $author = null;
@@ -132,25 +143,8 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     // check if h-card has an author
     if ( isset($properties['author']) && isset($properties['author'][0]['properties']) ) {
       $author = $properties['author'][0]['properties'];
-    }
-
-    // else get representative hcard
-    if (!$author) {
-      foreach ($mf_array["items"] as $mf) {
-        if ( isset( $mf["type"] ) ) {
-          if ( in_array( "h-card", $mf["type"] ) ) {
-            // check domain
-            if (isset($mf['properties']) && isset($mf['properties']['url'])) {
-              foreach ($mf['properties']['url'] as $url) {
-                if (parse_url($url, PHP_URL_HOST) == parse_url($source, PHP_URL_HOST)) {
-                  $author = $mf['properties'];
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
+    } else {
+      $author = self::get_representative_author($mf_array, $properties, $target);
     }
 
     // if author is present use the informations for the comment
@@ -169,8 +163,30 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     }
 
     // add source url as comment-meta
-    update_comment_meta( $commentdata["comment_ID"], "semantic_linkbacks_type", $this->type, true );
+    update_comment_meta( $commentdata["comment_ID"], "semantic_linkbacks_source", esc_url_raw($source), true );
 
+    // set canonical url (u-url)
+    if (isset($properties['url']) && isset($properties['url'][0])) {
+      $canonical = $properties['url'][0];
+    }
+
+    // add canonical url as comment-meta
+    update_comment_meta( $commentdata["comment_ID"], "semantic_linkbacks_canonical", esc_url_raw($canonical), true );
+
+    // get post type
+    $type = self::get_entry_type($target, $entry, $mf_array);
+
+    // remove "webmention" comment-type if $type is "reply"
+    if ($type == "reply") {
+      global $wpdb;
+
+      $wpdb->update( $wpdb->comments, array( 'comment_type' => '' ), array( 'comment_ID' => $commentdata["comment_ID"] ) );
+    }
+
+    // add type as comment-meta
+    update_comment_meta( $commentdata["comment_ID"], "semantic_linkbacks_type", $type, true );
+
+    // check photo
     if (isset($author['photo'])) {
       // add photo url as comment-meta
       update_comment_meta( $commentdata["comment_ID"], "semantic_linkbacks_avatar", $author['photo'][0], true );
@@ -179,7 +195,13 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     return $commentdata;
   }
 
-  public function get_entries($mf_array) {
+  /**
+   * get all h-entry items
+   *
+   * @param array $mf_array the microformats array
+   * @param array the h-entry array
+   */
+  public static function get_entries($mf_array) {
     $entries = array();
 
     // some basic checks
@@ -210,30 +232,61 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
   }
 
   /**
+   * helper to find the correct author node
+   *
+   * @param array $mf_array the parsed microformats array
+   * @param string $source the source url
+   * @return array|null the h-card node or null
+   */
+  public static function get_representative_author( $mf_array, $source ) {
+    foreach ($mf_array["items"] as $mf) {
+      if ( isset( $mf["type"] ) ) {
+        if ( in_array( "h-card", $mf["type"] ) ) {
+          // check domain
+          if (isset($mf['properties']) && isset($mf['properties']['url'])) {
+            foreach ($mf['properties']['url'] as $url) {
+              if (parse_url($url, PHP_URL_HOST) == parse_url($source, PHP_URL_HOST)) {
+                return $mf['properties'];
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * helper to find the correct h-entry node
    *
    * @param array $mf_array the parsed microformats array
    * @param string $target the target url
-   * @return array|false the h-entry node or false
+   * @return array the h-entry node or false
    */
-  public function get_representative_entry( $entries, $target ) {
+  public static function get_representative_entry( $entries, $target ) {
     // iterate array
     foreach ($entries as $entry) {
-      // @todo add p-in-reply-to context
-
       // check properties
       if ( isset( $entry['properties'] ) ) {
         // check properties if target urls was mentioned
         foreach ($entry['properties'] as $key => $values) {
-          $classes = $this->get_class_mapper();
+          // check "normal" links
+          if (in_array($target, $values)) {
+            return $entry;
+          }
 
-          // check u-* params
-          if ( in_array( $key, array_keys($classes) ) ) {
-            foreach ($values as $value) {
-              if ($value == $target) {
-                $this->type = $classes[$key];
-
-                return $entry;
+          // check included h-* formats and their links
+          foreach ($values as $obj) {
+            // check if reply is a "cite"
+            if (isset($obj['type']) && in_array('h-cite', $obj['type'])) {
+              // check url
+              if (isset($obj['properties']) && isset($obj['properties']['url'])) {
+                // check target
+                if (in_array($target, $obj['properties']['url'])) {
+                  return $entry;
+                }
               }
             }
           }
@@ -241,14 +294,19 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 
         // check properties if target urls was mentioned
         foreach ($entry['properties'] as $key => $values) {
-          if ( $key == "content" && preg_match_all("|<a[^>]+?".preg_quote($target, "|")."[^>]*>([^>]+?)</a>|", $values[0]['html'], $context) ) {
+          // check content for the link
+          if ( $key == "content" && preg_match_all("/<a[^>]+?".preg_quote($target, "/")."[^>]*>([^>]+?)<\/a>/i", $values[0]['html'], $context) ) {
+            return $entry;
+          // check summary for the link
+          } elseif ($key == "summary" && preg_match_all("/<a[^>]+?".preg_quote($target, "/")."[^>]*>([^>]+?)<\/a>/i", $values[0], $context) ) {
             return $entry;
           }
         }
       }
     }
 
-    return false;
+    // return first h-entry
+    return $entries[0];
   }
 
   /**
@@ -261,12 +319,12 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
    * @param string $alt Alternative text to use in image tag. Defaults to blank
    * @return string new avatar-url
    */
-  public function get_avatar($avatar, $id_or_email, $size, $default = '', $alt = '') {
+  public static function get_avatar($avatar, $id_or_email, $size, $default = '', $alt = '') {
     if (!is_object($id_or_email) || !isset($id_or_email->comment_type) || !get_comment_meta($id_or_email->comment_ID, 'semantic_linkbacks_avatar', true)) {
       return $avatar;
     }
 
-    // check if comment has a webfinger-avatar
+    // check if comment has an avatar
     $sl_avatar = get_comment_meta($id_or_email->comment_ID, 'semantic_linkbacks_avatar', true);
 
     if (!$sl_avatar) {
@@ -283,18 +341,68 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
   }
 
   /**
-   * show avatars also on pingbacks, trackbacks and webmentions
+   * check entry classes or document rels for post-type
    *
-   * @param array $types the comment_types
-   * @return array updated comment_types
+   * @param string $target the target url
+   * @param array $entry the represantative entry
+   * @param array $mf_array the document
+   * @return string the post-type
    */
-  public function get_avatar_comment_types($types) {
-    $types[] = "pingback";
-    $types[] = "trackback";
-    $types[] = "webmention";
+  public static function get_entry_type($target, $entry, $mf_array = array()) {
+    $classes = self::get_class_mapper();
 
-    return $types;
+    // check in-reply-context
+    if (isset($entry['properties']['in-reply-to']) && is_array($entry['properties']['in-reply-to'])) {
+      // iterate in-reply-tos
+      foreach ($entry['properties']['in-reply-to'] as $obj) {
+
+      }
+    }
+
+    // check properties for target-url
+    foreach ($entry['properties'] as $key => $values) {
+      // check u-* params
+      if ( in_array( $key, array_keys($classes) ) ) {
+        // check "normal" links
+        if (in_array($target, $values)) {
+          return $classes[$key];
+        }
+
+        // iterate in-reply-tos
+        foreach ($values as $obj) {
+          // check if reply is a "cite"
+          if (isset($obj['type']) && in_array('h-cite', $obj['type'])) {
+            // check url
+            if (isset($obj['properties']) && isset($obj['properties']['url'])) {
+              // check target
+              if (in_array($target, $obj['properties']['url'])) {
+                return $classes[$key];
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // check if site has any rels
+    if (!isset($mf_array['rels'])) {
+      return "mention";
+    }
+
+    $rels = self::get_rel_mapper();
+
+    // check rels for target-url
+    foreach ($mf_array['rels'] as $key => $values) {
+      // check rel params
+      if ( in_array( $key, array_keys($rels) ) ) {
+        foreach ($values as $value) {
+          if ($value == $target) {
+            return $rels[$key];
+          }
+        }
+      }
+    }
+
+    return "mention";
   }
 }
-
-new SemanticLinkbacksPlugin_MicroformatsHandler();
