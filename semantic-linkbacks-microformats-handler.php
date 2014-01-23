@@ -177,7 +177,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
     $type = self::get_entry_type($target, $entry, $mf_array);
 
     // remove "webmention" comment-type if $type is "reply"
-    if ($type == "reply") {
+    if ($type == "reply" || $type == "like" || $type == "repost" || $type == "favorite") {
       global $wpdb;
 
       $wpdb->update( $wpdb->comments, array( 'comment_type' => '' ), array( 'comment_ID' => $commentdata["comment_ID"] ) );
