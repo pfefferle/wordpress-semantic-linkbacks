@@ -47,6 +47,7 @@ class SemanticLinkbacksPlugin {
     add_filter('get_comment_author_url', array('SemanticLinkbacksPlugin', 'get_comment_author_url'), 99, 3);
     add_filter('get_avatar_comment_types', array('SemanticLinkbacksPlugin', 'get_avatar_comment_types'));
     add_filter('comment_class', array('SemanticLinkbacksPlugin', 'comment_class'), 10, 4);
+    add_filter('admin_init', array('SemanticLinkbacksPlugin', 'admin_init'), 10, 4);
   }
 
   /**
@@ -140,12 +141,13 @@ class SemanticLinkbacksPlugin {
     // disable flood control
     remove_filter('check_comment_flood', 'check_comment_flood_db', 10, 3);
 
+    // Moderation Checks
+    $commentdata["comment_approved"]=self::linkback_approved($commentdata);
+
     // update comment
     wp_update_comment($commentdata);
-
     // re-add flood control
     add_filter('check_comment_flood', 'check_comment_flood_db', 10, 3);
-
     return $comment_ID;
   }
 
@@ -394,6 +396,65 @@ class SemanticLinkbacksPlugin {
 
     return $types;
   }
+
+  /**
+   * Add Settings to the Discussions Page
+   *
+   */
+  public static function admin_init() {
+    register_setting(
+		'discussion',                 // settings page
+		'semantic_linkback_options'          // option name
+	);
+//	add_settings_field(
+//		'enable_something',      // id
+//		'Enable Something',              // setting title
+//		array('SemanticLinkbacksPlugin', 'settings_checkbox_input'),    // display callback
+//		'discussion',                 // settings page
+//		'default',                 // settings section
+//		array ( 'name' => 'enable_something')
+//	);
+  }
+
+  /**
+   * Display a Settings Checkbox Field
+   *
+   */
+  public static function settings_checkbox_input(array $args) {
+ 	$options = get_option('semantic_linkback_options');
+        $name = $args['name'];
+        if (!$options) { $checked='0'; }
+	else { 	$checked = $options[$name]; }
+	echo "<input name='semantic_linkback_options[$name]' type='hidden' value='0' />";
+	echo "<input name='semantic_linkback_options[$name]' type='checkbox' value='1' " . checked( 1, $checked, false ) . " /> ";
+}
+
+  /**
+   * 
+   * @param array $commentdata
+   *
+   * @return mixed Signifies the approval status (0|1|'spam') 
+
+   *
+   */
+  public static function linkback_approved($commentdata) {
+	$approved = 0;
+	global $wpdb;
+	$url = $commentadata["url"];
+	// Approves if the 'Author Must Have a Previously Approved Comment' is checked
+	// And the URL of the new comment matches a previous one
+	if ( 1 == get_option('comment_whitelist')) {
+	     if ( 'comment' != $commentdata["comment_type"]) {
+	          $ok_to_comment = $wpdb->get_var("SELECT comment_approved FROM $wpdb->comments WHERE comment_author_url = '$url' and comment_approved = '1' LIMIT 1");
+		if($ok_to_comment==1) {
+			$approved =1 ;
+			}
+ 		}               		
+	}
+	$approved = apply_filters( 'pre_linkback_approved', $approved, $commentdata );
+	return $approved;
+   }
+
 }
 
 /**
