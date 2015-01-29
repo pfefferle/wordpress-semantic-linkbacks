@@ -414,6 +414,16 @@ class SemanticLinkbacksPlugin {
 //		'default',                 // settings section
 //		array ( 'name' => 'enable_something')
 //	);
+     add_settings_field(
+              'whitelist_keys',      // id
+              'Domain Whitelist for Linkbacks',              // setting title
+              array('SemanticLinkbacksPlugin', 'settings_whitelist_input'),    // display callback
+              'discussion',                 // settings page
+              'default'                 // settings section
+              
+      );
+
+
   }
 
   /**
@@ -428,6 +438,19 @@ class SemanticLinkbacksPlugin {
 	echo "<input name='semantic_linkback_options[$name]' type='hidden' value='0' />";
 	echo "<input name='semantic_linkback_options[$name]' type='checkbox' value='1' " . checked( 1, $checked, false ) . " /> ";
 }
+  /*
+   * Display a Settings Checkbox Field
+   *
+   */
+  public static function settings_whitelist_input() {
+        $options = get_option('semantic_linkback_options');
+	$name = "whitelist_keys";
+	echo "<p>One domain name per line.</p>";
+        echo "<textarea name='semantic_linkback_options[$name]' rows='10' cols='50'>"; 
+        if (!empty($options['whitelist_keys'])) {echo $options['whitelist_keys']; }
+	echo "</textarea>";
+}
+
 
   /**
    * 
@@ -439,23 +462,44 @@ class SemanticLinkbacksPlugin {
    */
   public static function linkback_approved($commentdata) {
 	$approved = 0;
-	global $wpdb;
-	$url = $commentadata["url"];
-	// Approves if the 'Author Must Have a Previously Approved Comment' is checked
-	// And the URL of the new comment matches a previous one
-	if ( 1 == get_option('comment_whitelist')) {
-	     if ( 'comment' != $commentdata["comment_type"]) {
-	          $ok_to_comment = $wpdb->get_var("SELECT comment_approved FROM $wpdb->comments WHERE comment_author_url = '$url' and comment_approved = '1' LIMIT 1");
-		if($ok_to_comment==1) {
-			$approved =1 ;
-			}
- 		}               		
-	}
+	$url = get_comment_meta($commentdata["comment_ID"], "semantic_linkbacks_source",true);
+	if (self::whitelist_approved($url)) {
+		$approved = 1;
+	   }
 	$approved = apply_filters( 'pre_linkback_approved', $approved, $commentdata );
 	return $approved;
    }
 
+  /**
+   *              
+   * @param array $author_url
+   *
+   * @return boolean
+
+   *
+   */
+  public static function whitelist_approved($url) {
+        $options = get_option('semantic_linkback_options');
+        $mod_keys = trim( $options['whitelist_keys'] );
+        $host = parse_url($url, PHP_URL_HOST);
+         // strip leading www, if any
+        $host = preg_replace("/^www\./", "", $host);
+	if ( '' == $mod_keys ) {
+        	return false;
+	     }
+	$domains = explode("\n", $mod_keys );
+        foreach ( (array) $domains as $domain ) {
+		$domain = trim($domain);
+		if (empty($domain)) { continue; }
+		if (strcasecmp($domain, $host)==0) {
+		   return true;
+		  }
+	}
+	return false;
+   }
+
 }
+
 
 /**
  * Get a Count of Linkbacks by Type
