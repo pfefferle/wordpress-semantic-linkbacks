@@ -15,7 +15,8 @@ if (!class_exists("SemanticLinkbacksPlugin")) :
 function semantic_linkbacks_activation() {
   if (version_compare(phpversion(), 5.3, '<')) {
     die("The minimum PHP version required for this plugin is 5.3");
-  }
+	}
+  SemanticLinkbacksPlugin::bulk_linkback_fix();
 }
 register_activation_hook(__FILE__, 'semantic_linkbacks_activation');
 
@@ -497,6 +498,35 @@ class SemanticLinkbacksPlugin {
 	}
 	return false;
    }
+
+ /**
+   * update older posts - to be run on activate/upgrade
+   *
+   * 
+   */  
+  public static function bulk_linkback_fix() {
+	  $args = array(
+		'meta_query' => array(
+  					'relation' => 'OR',
+					array(
+						'key' => 'semantic_linkbacks_type',
+						'compare' => 'NOT EXISTS'
+						),
+				     )
+	  );
+	
+	$comments = get_comments($args);
+	// Comment Loop
+	if ( $comments ) {
+		foreach ( $comments as $comment ) {
+			if($comment->comment_type!='')
+				{
+					self::linkback_fix($comment->comment_ID);
+				}
+			}
+	   }
+
+}
 
 }
 
