@@ -47,6 +47,38 @@ class SemanticLinkbacksPlugin {
     add_filter('get_comment_author_url', array('SemanticLinkbacksPlugin', 'get_comment_author_url'), 99, 3);
     add_filter('get_avatar_comment_types', array('SemanticLinkbacksPlugin', 'get_avatar_comment_types'));
     add_filter('comment_class', array('SemanticLinkbacksPlugin', 'comment_class'), 10, 4);
+    add_filter('admin_init', array('SemanticLinkbacksPlugin', 'admin_init'), 10, 4);
+  }
+
+  /**
+    * Add Settings to the Discussions Page
+    *
+    */
+  public static function admin_init() {
+    register_setting(
+      'discussion', // settings page 
+      'semantic_linkback_options' // option name
+    );
+    add_settings_field(
+      'whitelist_keys', // id
+      'Domain Whitelist for Linkbacks', // setting title
+      array('SemanticLinkbacksPlugin', 'settings_whitelist_input'), // display callback
+      'discussion', // settings page
+      'default' // settings section
+    );
+  }
+
+ /*
+  * Display the WhiteList Field
+  *
+  */
+  public static function settings_whitelist_input() {
+    $options = get_option('semantic_linkback_options');
+    $name = "whitelist_keys";
+    echo "<p><label for='whitelist_keys'> One domain name per line.</label></p>";
+    echo "<textarea name='semantic_linkback_options[$name]' rows='10' cols='50' class='large-text code'>";
+    if (!empty($options['whitelist_keys'])) {echo $options['whitelist_keys']; }
+    echo "</textarea>";
   }
 
   /**
@@ -139,6 +171,9 @@ class SemanticLinkbacksPlugin {
 
     // disable flood control
     remove_filter('check_comment_flood', 'check_comment_flood_db', 10, 3);
+
+    // Moderation Checks
+    $commentdata["comment_approved"]=self::linkback_approved($commentdata);
 
     // update comment
     wp_update_comment($commentdata);
@@ -394,6 +429,51 @@ class SemanticLinkbacksPlugin {
 
     return $types;
   }
+
+  /**
+  *
+  * @param array $commentdata
+  *
+  * @return mixed Signifies the approval status (0|1|'spam')
+  *
+  */
+  public static function linkback_approved($commentdata) {
+    $approved = 0;
+    $url = get_comment_meta($commentdata["comment_ID"], "semantic_linkbacks_source",true);
+    if (self::whitelist_approved($url)) {
+      $approved = 1;
+    }
+    $approved = apply_filters( 'pre_linkback_approved', $approved, $commentdata );
+    return $approved;
+  }
+
+ /**
+  *
+  * @param array $author_url
+  *
+  * @return boolean
+  *
+  */
+  public static function whitelist_approved($url) {
+    $options = get_option('semantic_linkback_options');
+    $mod_keys = trim( $options['whitelist_keys'] );
+    $host = parse_url($url, PHP_URL_HOST);
+    // strip leading www, if any
+    $host = preg_replace("/^www\./", "", $host);
+    if ( '' == $mod_keys ) {
+    return false;
+    }
+    $domains = explode("\n", $mod_keys );
+    foreach ( (array) $domains as $domain ) {
+      $domain = trim($domain);
+      if (empty($domain)) { continue; }
+      if (strcasecmp($domain, $host)==0) {
+      return true;
+      }
+    }
+    return false;
+  }
+
 }
 
 /**
