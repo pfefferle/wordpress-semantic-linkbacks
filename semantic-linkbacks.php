@@ -5,7 +5,7 @@
  Description: Semantic Linkbacks for webmentions, trackbacks and pingbacks
  Author: pfefferle & acegiak
  Author URI: http://notizblog.org/
- Version: 3.0.2
+ Version: 3.0.4
 */
 
 if (!class_exists("SemanticLinkbacksPlugin")) :
@@ -225,7 +225,7 @@ class SemanticLinkbacksPlugin {
                       '</a></cite></small></p>';
     }
 
-    return apply_filters("semantic_linkbacks_cite", $text);
+    return apply_filters("semantic_linkbacks_cite", $text, $comment);
   }
 
   /**
@@ -278,7 +278,7 @@ class SemanticLinkbacksPlugin {
     // generate output
     $text = sprintf($comment_type_excerpts[$comment_type], get_comment_author_link($comment->comment_ID), $post_format, $url, $host);
 
-    return apply_filters("semantic_linkbacks_excerpt", $text);
+    return apply_filters("semantic_linkbacks_excerpt", $text, $comment);
   }
 
   /**
