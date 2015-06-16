@@ -415,11 +415,11 @@ class SemanticLinkbacksPlugin {
       'like'          => 'u-like',
       'favorite'      => 'u-favorite',
       'tag'           => 'u-tag',
-      'rsvp:yes'      => 'p-rsvp',
-      'rsvp:no'       => 'p-rsvp',
-      'rsvp:maybe'    => 'p-rsvp',
-      'rsvp:invited'  => 'p-rsvp',
-      'rsvp:tracking' => 'p-rsvp'
+      'rsvp:yes'      => 'u-rsvp',
+      'rsvp:no'       => 'u-rsvp',
+      'rsvp:maybe'    => 'u-rsvp',
+      'rsvp:invited'  => 'u-rsvp',
+      'rsvp:tracking' => 'u-rsvp'
     );
 
     $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, 'semantic_linkbacks_type', true);
