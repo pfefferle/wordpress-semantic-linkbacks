@@ -57,6 +57,8 @@ class SemanticLinkbacksPlugin {
     add_filter('get_comment_author_url', array('SemanticLinkbacksPlugin', 'get_comment_author_url'), 99, 3);
     add_filter('get_avatar_comment_types', array('SemanticLinkbacksPlugin', 'get_avatar_comment_types'));
     add_filter('comment_class', array('SemanticLinkbacksPlugin', 'comment_class'), 10, 4);
+    add_filter('comment_notification_subject', array('SemanticLinkbacksPlugin', 'comment_notification_subject') );
+    add_filter('comment_notification_text', array('SemanticLinkbacksPlugin', 'comment_notification_text') );
   }
 
   /**
@@ -448,6 +450,61 @@ class SemanticLinkbacksPlugin {
 
     return $types;
   }
+
+  /**
+   * Filters Comment Notification Subject to Be Semantic Aware
+   *
+   * @param string $subject the subject text
+   * @param int    $comment_id Comment ID
+   *
+   * @return string subject
+   */
+  public static function comment_notification_subject($subject, $comment_id) {
+    $comment = get_comment( $comment_id );
+    $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
+    $post    = get_post( $comment->comment_post_ID );
+    $strings = get_comment_type_strings();
+    if ( empty( $comment ) )
+       return $subject;
+    if ( in_array( $comment->comment_type, array( "pingback", "trackback", "webmention" ) ) ) {
+       $subject = sprintf( __('[%1$s] %2$s: "%3$s"'), $blogname, $strings[$semantic_linkbacks_type] , $post->post_title );
+    }
+    return $subject;
+  }
+
+  /**
+   * Filters Comment Notification Text to Be Semantic Aware
+   *
+   * @param string $notify_message The comment notification email text.
+   * @param int    $comment_id Comment ID
+   *
+   * @return string subject
+   */
+  public static function comment_notification_text($notify_message, $comment_id) {
+    $comment = get_comment( $comment_id );
+    $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
+    // get URL canonical url...
+    $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_canonical", true);
+    // ...or fall back to source
+    if (!$semantic_linkbacks_canonical) {
+      $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_source", true);
+    }
+    $host = parse_url($semantic_linkbacks_canonical, PHP_URL_HOST);
+    // strip leading www, if any
+    $host = preg_replace("/^www\./", "", $host);
+    $post    = get_post( $comment->comment_post_ID );
+    if ( empty( $comment ) )
+       return $notify_message;
+		if ( in_array( $comment->comment_type, array( "pingback", "trackback", "webmention" ) ) ) {
+       $notify_message  = sprintf( __( 'New mention on your post "%s"' ), $post->post_title ) . "\r\n";
+       /* translators: 1: website name, 2: website hostname */
+       $notify_message .= sprintf( __('Website: %1$s (%2$s)'), $comment->comment_author, $host ) . "\r\n";
+       $notify_message .= sprintf( __( 'URL: %s' ), $semantic_linkbacks_canonical ) . "\r\n";
+       $notify_message .= sprintf( __('Mention: %s' ), "\r\n" . self::comment_text_excerpt($comment->comment_content, $comment) ) . "\r\n\r\n";
+    }    
+  return $notify_message;
+  } 
+
 }
 
 /**
