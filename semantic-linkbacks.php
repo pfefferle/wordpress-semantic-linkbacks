@@ -57,8 +57,12 @@ class SemanticLinkbacksPlugin {
     add_filter('get_comment_author_url', array('SemanticLinkbacksPlugin', 'get_comment_author_url'), 99, 3);
     add_filter('get_avatar_comment_types', array('SemanticLinkbacksPlugin', 'get_avatar_comment_types'));
     add_filter('comment_class', array('SemanticLinkbacksPlugin', 'comment_class'), 10, 4);
-    add_filter('comment_notification_subject', array('SemanticLinkbacksPlugin', 'comment_notification_subject') );
-    add_filter('comment_notification_text', array('SemanticLinkbacksPlugin', 'comment_notification_text') );
+
+    add_filter('comment_notification_subject', array('SemanticLinkbacksPlugin', 'comment_notification_subject'), 11 );
+    add_filter('comment_notification_text', array('SemanticLinkbacksPlugin', 'comment_notification_text'), 11 );
+
+    add_filter('ckpn_newcomment_subject', array('SemanticLinkbacksPlugin', 'comment_notification_subject') );
+    add_filter('ckpn_newcomment_message', array('SemanticLinkbacksPlugin', 'comment_notification_text') );
   }
 
   /**
@@ -242,6 +246,22 @@ class SemanticLinkbacksPlugin {
   }
 
   /**
+   * return correct URL
+   *
+   * @param WP_Comment $comment the comment object
+   * @return string the URL
+   */
+ public static function get_url($comment = null) {
+    // get URL canonical url...
+    $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_canonical", true);
+    // ...or fall back to source
+    if (!$semantic_linkbacks_canonical) {
+      $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_source", true);
+    }
+    return $semantic_linkbacks_canonical;
+  }
+
+  /**
    * add cite to "reply"s
    *
    * thanks to @snarfed for the idea
@@ -253,7 +273,6 @@ class SemanticLinkbacksPlugin {
    */
   public static function comment_text_add_cite($text, $comment = null, $args = array()) {
     $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
-
     // only change text for "real" comments (replys)
     if (!$comment ||
         !$semantic_linkbacks_type ||
@@ -261,22 +280,15 @@ class SemanticLinkbacksPlugin {
         $semantic_linkbacks_type != "reply") {
       return $text;
     }
-
-    // get URL canonical url...
-    $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_canonical", true);
-    // ...or fall back to source
-    if (!$semantic_linkbacks_canonical) {
-      $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_source", true);
-    }
-
-    $host = parse_url($semantic_linkbacks_canonical, PHP_URL_HOST);
+    $url = self::get_url($comment);
+    $host = parse_url($url, PHP_URL_HOST);
 
     // strip leading www, if any
     $host = preg_replace("/^www\./", "", $host);
     // note that WordPress's sanitization strips the class="u-url". sigh. :/ also,
     // <cite> is one of the few elements that make it through the sanitization and
     // is still uncommon enough that we can use it for styling.
-    $text .= '<p><small>&mdash;&nbsp;<cite><a class="u-url" href="' . $semantic_linkbacks_canonical . '">via ' . $host . '</a></cite></small></p>';
+    $text .= '<p><small>&mdash;&nbsp;<cite><a class="u-url" href="' . $url . '">via ' . $host . '</a></cite></small></p>';
 
     return apply_filters("semantic_linkbacks_cite", $text);
   }
@@ -303,33 +315,32 @@ class SemanticLinkbacksPlugin {
     if (!in_array($semantic_linkbacks_type, array_keys(self::get_comment_type_strings()))) {
       $semantic_linkbacks_type = "mention";
     }
+    if (current_theme_supports('post-formats') ) {
+      $post_format = get_post_format($comment->comment_post_ID);
+      // replace "standard" with "Article"
+      if (!$post_format || !in_array($post_format, array_keys(self::get_post_format_strings()))) {
+        $post_format = "standard";
+      }
 
-    $post_format = get_post_format($comment->comment_post_ID);
-
-    // replace "standard" with "Article"
-    if (!$post_format || !in_array($post_format, array_keys(self::get_post_format_strings()))) {
-      $post_format = "standard";
+      $post_formatstrings = self::get_post_format_strings();
+      $post_type = $post_formatstrings[$post_format];
     }
-
-    $post_formatstrings = self::get_post_format_strings();
+    else {
+      $post_type = __('this post',    'semantic_linkbacks');
+      $post_type = apply_filters('semantic_linkbacks_post_type', $post_type, $comment->comment_post_ID);    }
 
     // get all the excerpts
     $comment_type_excerpts = self::get_comment_type_excerpts();
 
-    // get URL canonical url...
-    $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_canonical", true);
-    // ...or fall back to source
-    if (!$semantic_linkbacks_canonical) {
-      $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_source", true);
-    }
+    $url = self::get_url($comment);
 
     // parse host
-    $host = parse_url($semantic_linkbacks_canonical, PHP_URL_HOST);
+    $host = parse_url($url, PHP_URL_HOST);
     // strip leading www, if any
     $host = preg_replace("/^www\./", "", $host);
 
     // generate output
-    $text = sprintf($comment_type_excerpts[$semantic_linkbacks_type], get_comment_author_link($comment->comment_ID), $post_formatstrings[$post_format], $semantic_linkbacks_canonical, $host);
+    $text = sprintf($comment_type_excerpts[$semantic_linkbacks_type], get_comment_author_link($comment->comment_ID), $post_type, $url, $host);
 
     return apply_filters("semantic_linkbacks_excerpt", $text);
   }
@@ -452,7 +463,24 @@ class SemanticLinkbacksPlugin {
   }
 
   /**
-   * Filters Comment Notification Subject to Be Semantic Aware
+   * Returns a Notification which can be passed to a variety of sources
+   *
+   * @param int    $comment Comment
+   *
+   * @return string alert
+   */
+  public static function notification($comment) {
+    if ( empty( $comment ) )
+       return $false;
+    $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
+    $post    = get_post( $comment->comment_post_ID );
+    $strings = get_comment_type_strings();
+    $alert = sprintf( __('[%1$s] %2$s: "%3$s"'), $blogname, $strings[$semantic_linkbacks_type] , $post->post_title );
+    return $alert;
+  }
+
+  /**
+   * Filters Comment Notification Subject
    *
    * @param string $subject the subject text
    * @param int    $comment_id Comment ID
@@ -460,17 +488,61 @@ class SemanticLinkbacksPlugin {
    * @return string subject
    */
   public static function comment_notification_subject($subject, $comment_id) {
-    $comment = get_comment( $comment_id );
-    $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
-    $post    = get_post( $comment->comment_post_ID );
-    $strings = get_comment_type_strings();
-    if ( empty( $comment ) )
+    $comment = get_comment($comment_id);
+    if (!comment) {
        return $subject;
-    if ( in_array( $comment->comment_type, array( "pingback", "trackback", "webmention" ) ) ) {
-       $subject = sprintf( __('[%1$s] %2$s: "%3$s"'), $blogname, $strings[$semantic_linkbacks_type] , $post->post_title );
     }
-    return $subject;
+    if (!in_array( $comment->comment_type, array( "pingback", "trackback", "webmention" ) ) ) {
+       return $subject;
+    }
+    return notification($comment);
   }
+
+  /**
+   * Generates Comment Approval Text
+   *
+   * @param object    $comment Comment
+   *
+   * @return string subject
+   */
+  public static function comment_notification_approve($comment) {
+    $notify_message .= get_permalink($comment->comment_post_ID) . "#comments\r\n\r\n";
+    $notify_message .= sprintf( __('Permalink: %s'), get_comment_link( $comment_id ) ) . "\r\n";
+ 
+    if ( user_can( $post->post_author, 'edit_comment', $comment->comment_id ) ) {
+        if ( EMPTY_TRASH_DAYS )
+            $notify_message .= sprintf( __('Trash it: %s'), admin_url("comment.php?action=trash&c=$comment->comment_id") ) . "\r\n";
+        else
+            $notify_message .= sprintf( __('Delete it: %s'), admin_url("comment.php?action=delete&c=$comment->comment_id") ) . "\r\n";
+        $notify_message .= sprintf( __('Spam it: %s'), admin_url("comment.php?action=spam&c=$comment->comment_id") ) . "\r\n";
+    }
+    return $notify_message;
+  }
+
+  /**
+   * Generates Linkback Notification Details
+   *
+   * @param object    $comment Comment
+   *
+   * @return string notify_message
+   */
+  public static function linkback_notification_details($comment) {
+    $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
+    $url = self::get_url($comment);
+    $strings = get_comment_type_strings();
+    $host = parse_url($url, PHP_URL_HOST);
+    // strip leading www, if any
+    $host = preg_replace("/^www\./", "", $host);
+    $post_title = get_the_title($comment->comment_post_ID );
+
+    $notify_message  = sprintf( __( 'New %1$s on your post "%2$s"' ), $strings[$semantic_linkbacks_type], $post_title ) . "\r\n";
+    /* translators: 1: website name, 2: website hostname */
+    $notify_message .= sprintf( __('From: %1$s via %2$s'), $comment->comment_author, $host ) . "\r\n";
+    $notify_message .= sprintf( __( 'URL: %s' ), $semantic_linkbacks_canonical ) . "\r\n";
+    $notify_message .= sprintf( __('Mention: %s' ), "\r\n" . self::comment_text_excerpt($comment->comment_content, $comment) ) . "\r\n\r\n";
+
+    return $notify_message;
+  } 
 
   /**
    * Filters Comment Notification Text to Be Semantic Aware
@@ -482,27 +554,17 @@ class SemanticLinkbacksPlugin {
    */
   public static function comment_notification_text($notify_message, $comment_id) {
     $comment = get_comment( $comment_id );
-    $semantic_linkbacks_type = get_comment_meta($comment->comment_ID, "semantic_linkbacks_type", true);
-    // get URL canonical url...
-    $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_canonical", true);
-    // ...or fall back to source
-    if (!$semantic_linkbacks_canonical) {
-      $semantic_linkbacks_canonical = get_comment_meta($comment->comment_ID, "semantic_linkbacks_source", true);
+    if (!comment) {
+      return $notify_message;
     }
-    $host = parse_url($semantic_linkbacks_canonical, PHP_URL_HOST);
-    // strip leading www, if any
-    $host = preg_replace("/^www\./", "", $host);
-    $post    = get_post( $comment->comment_post_ID );
-    if ( empty( $comment ) )
-       return $notify_message;
-		if ( in_array( $comment->comment_type, array( "pingback", "trackback", "webmention" ) ) ) {
-       $notify_message  = sprintf( __( 'New mention on your post "%s"' ), $post->post_title ) . "\r\n";
-       /* translators: 1: website name, 2: website hostname */
-       $notify_message .= sprintf( __('Website: %1$s (%2$s)'), $comment->comment_author, $host ) . "\r\n";
-       $notify_message .= sprintf( __( 'URL: %s' ), $semantic_linkbacks_canonical ) . "\r\n";
-       $notify_message .= sprintf( __('Mention: %s' ), "\r\n" . self::comment_text_excerpt($comment->comment_content, $comment) ) . "\r\n\r\n";
-    }    
-  return $notify_message;
+    if (in_array( $comment->comment_type, array( "pingback", "trackback", "webmention" ) ) ) {
+      return $notify_message;
+    }
+    else {
+      $notify_message .= linkback_notification_details($comment);
+    }
+    $notify_message .= comment_notification_approve($comment);
+    return $notify_message;
   } 
 
 }
