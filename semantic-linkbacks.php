@@ -49,7 +49,7 @@ class SemanticLinkbacksPlugin {
 		// your code: `remove_filter('comment_text', array('SemanticLinkbacksPlugin', 'comment_text_add_cite'), 11);`
 		add_filter( 'comment_text', array( 'SemanticLinkbacksPlugin', 'comment_text_add_cite' ), 11, 3 );
 		add_filter( 'comment_text', array( 'SemanticLinkbacksPlugin', 'comment_text_excerpt' ), 12, 3 );
-
+    add_filter( 'comment_excerpt', array( 'SemanticLinkbacksPlugin', 'comment_excerpt' ), 12, 2 );
 		add_filter( 'get_comment_link', array( 'SemanticLinkbacksPlugin', 'get_comment_link' ), 99, 3 );
 		add_filter( 'get_comment_author_url', array( 'SemanticLinkbacksPlugin', 'get_comment_author_url' ), 99, 3 );
 		add_filter( 'get_avatar_comment_types', array( 'SemanticLinkbacksPlugin', 'get_avatar_comment_types' ) );
@@ -353,6 +353,18 @@ class SemanticLinkbacksPlugin {
 		$text = sprintf( $comment_type_excerpts[ $semantic_linkbacks_type ], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
 
 		return apply_filters( 'semantic_linkbacks_excerpt', $text );
+	}
+
+  /**
+   * generate excerpt for all types except "reply"
+   *
+   * @param string $text the comment text
+   * @param WP_Comment $comment the comment object
+   * @param array $args a list of arguments
+   * @return string the filtered comment text
+   */
+  public static function comment_excerpt( $comment_excerpt, $comment_id = null) {
+		return self::comment_text_excerpt( $comment_excerpt, get_comment($comment_id) );
 	}
 
 	/**
