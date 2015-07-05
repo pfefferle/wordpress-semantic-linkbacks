@@ -358,9 +358,8 @@ class SemanticLinkbacksPlugin {
   /**
    * generate excerpt for all types except "reply"
    *
-   * @param string $text the comment text
-   * @param WP_Comment $comment the comment object
-   * @param array $args a list of arguments
+   * @param string $comment_excerpt the comment text
+   * @param int $comment_id the comment id
    * @return string the filtered comment text
    */
   public static function comment_excerpt( $comment_excerpt, $comment_id = null) {
