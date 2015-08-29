@@ -13,7 +13,7 @@
 // version is required by the mf2 parser
 function semantic_linkbacks_activation() {
 	if ( version_compare( phpversion(), 5.3, '<' ) ) {
-		die('The minimum PHP version required for this plugin is 5.3');
+		die( 'The minimum PHP version required for this plugin is 5.3' );
 	}
 }
 register_activation_hook( __FILE__, 'semantic_linkbacks_activation' );
@@ -153,7 +153,7 @@ class SemanticLinkbacksPlugin {
 		foreach ( $commentdata as $key => $value ) {
 			if ( 0 === strpos( $key, '_' ) ) {
 				update_comment_meta( $commentdata['comment_ID'], 'semantic_linkbacks'.$key, $value, true );
-				unset( $commentdata[$key] );
+				unset( $commentdata[ $key ] );
 			}
 		}
 
@@ -188,7 +188,7 @@ class SemanticLinkbacksPlugin {
 			'rsvp:no'		=> __( '%1$s is <strong>not attending</strong>',			'semantic_linkbacks' ),
 			'rsvp:maybe'	=> __( 'Maybe %1$s will be <strong>attending</strong>',		'semantic_linkbacks' ),
 			'rsvp:invited'	=> __( '%1$s is <strong>invited</strong>',					'semantic_linkbacks' ),
-			'rsvp:tracking'	=> __( '%1$s <strong>tracks</strong> this event',			'semantic_linkbacks' )
+			'rsvp:tracking'	=> __( '%1$s <strong>tracks</strong> this event',			'semantic_linkbacks' ),
 		);
 
 		return $strings;
@@ -213,7 +213,7 @@ class SemanticLinkbacksPlugin {
 			'rsvp:no'		=> __( 'RSVP',		'semantic_linkbacks' ),
 			'rsvp:invited'	=> __( 'RSVP',		'semantic_linkbacks' ),
 			'rsvp:maybe'	=> __( 'RSVP',		'semantic_linkbacks' ),
-			'rsvp:tracking'	=> __( 'RSVP',		'semantic_linkbacks' )
+			'rsvp:tracking'	=> __( 'RSVP',		'semantic_linkbacks' ),
 		);
 
 		return $strings;
@@ -237,7 +237,7 @@ class SemanticLinkbacksPlugin {
 			'quote'		=> __( 'this Quote',	'semantic_linkbacks' ),
 			'status'	=> __( 'this Status',	'semantic_linkbacks' ),
 			'video'		=> __( 'this Video',	'semantic_linkbacks' ),
-			'audio'		=> __( 'this Audio',	'semantic_linkbacks' )
+			'audio'		=> __( 'this Audio',	'semantic_linkbacks' ),
 		);
 
 		return $strings;
@@ -260,6 +260,7 @@ class SemanticLinkbacksPlugin {
 		if ( ! $semantic_linkbacks_canonical ) {
 			$semantic_linkbacks_canonical = $comment->comment_author_url;
 		}
+
 		return $semantic_linkbacks_canonical;
 	}
 
@@ -310,6 +311,7 @@ class SemanticLinkbacksPlugin {
 		// only change text for pingbacks/trackbacks/webmentions
 		if ( ! $comment ||
 			'' == $comment->comment_type ||
+			! $semantic_linkbacks_type ||
 			'reply' == $semantic_linkbacks_type ) {
 			return $text;
 		}
@@ -331,7 +333,7 @@ class SemanticLinkbacksPlugin {
 
 		// get post type
 		$post_formatstrings = self::get_post_format_strings();
-		$post_type = $post_formatstrings[$post_format];
+		$post_type = $post_formatstrings[ $post_format ];
 
 		$post_type = apply_filters( 'semantic_linkbacks_post_type', $post_type, $comment->comment_post_ID );
 
@@ -346,7 +348,7 @@ class SemanticLinkbacksPlugin {
 		$host = preg_replace( '/^www\./', '', $host );
 
 		// generate output
-		$text = sprintf( $comment_type_excerpts[$semantic_linkbacks_type], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
+		$text = sprintf( $comment_type_excerpts[ $semantic_linkbacks_type ], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
 
 		return apply_filters( 'semantic_linkbacks_excerpt', $text );
 	}
@@ -371,7 +373,7 @@ class SemanticLinkbacksPlugin {
 	 */
 	public static function pre_get_avatar_data($args, $id_or_email) {
 		if ( ! isset( $args['class'] ) ) {
-			$args['class'] = array('u-photo');
+			$args['class'] = array( 'u-photo' );
 		} else {
 			$args['class'][] = 'u-photo';
 		}
@@ -438,7 +440,7 @@ class SemanticLinkbacksPlugin {
 
 		// "comment type to class" mapper
 		$class_mapping = array(
-			'mention'		=> array( 'h-as-mention'),
+			'mention'		=> array( 'h-as-mention' ),
 
 			'reply'			=> array( 'h-as-reply' ),
 			'repost'		=> array( 'h-as-repost', 'p-repost' ),
@@ -449,14 +451,14 @@ class SemanticLinkbacksPlugin {
 			'rsvp:no'		=> array( 'h-as-rsvp' ),
 			'rsvp:maybe'	=> array( 'h-as-rsvp' ),
 			'rsvp:invited'	=> array( 'h-as-rsvp' ),
-			'rsvp:tracking'	=> array( 'h-as-rsvp' )
+			'rsvp:tracking'	=> array( 'h-as-rsvp' ),
 		);
 
 		$semantic_linkbacks_type = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', true );
 
 		// check the comment type
-		if ( $semantic_linkbacks_type && isset( $class_mapping[$semantic_linkbacks_type] ) ) {
-			$classes = array_merge( $classes, $class_mapping[$semantic_linkbacks_type] );
+		if ( $semantic_linkbacks_type && isset( $class_mapping[ $semantic_linkbacks_type ] ) ) {
+			$classes = array_merge( $classes, $class_mapping[ $semantic_linkbacks_type ] );
 
 			$classes = array_unique( $classes );
 		}

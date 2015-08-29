@@ -305,9 +305,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 					if ( 'content' == $key &&
 						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i', $values[0]['html'], $context ) ) {
 						return $entry;
-					}
-					// check summary for the link
-					elseif ( 'summary' == $key &&
+					} elseif ( 'summary' == $key &&
 						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i',  $values[0], $context ) ) {
 						return $entry;
 					}
@@ -336,7 +334,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 			if ( in_array( $key, array_keys( $classes ) ) ) {
 				// check "normal" links
 				if ( self::compare_urls( $target, $values ) ) {
-					return $classes[$key];
+					return $classes[ $key ];
 				}
 
 				// iterate in-reply-tos
@@ -347,7 +345,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 						if ( isset( $obj['properties'] ) && isset( $obj['properties']['url'] ) ) {
 							// check target
 							if ( self::compare_urls( $target, $obj['properties']['url'] ) ) {
-								return $classes[$key];
+								return $classes[ $key ];
 							}
 						}
 					}
@@ -368,7 +366,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 			if ( in_array( $key, array_keys( $rels ) ) ) {
 				foreach ( $values as $value ) {
 					if ( $value == $target ) {
-						return $rels[$key];
+						return $rels[ $key ];
 					}
 				}
 			}
@@ -386,7 +384,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 	 * @return boolean
 	 */
 	public static function check_mf_attr($key, $node) {
-		if ( isset( $node[$key] ) && isset( $node[$key][0] ) ) {
+		if ( isset( $node[ $key ] ) && isset( $node[ $key ][0] ) ) {
 			return true;
 		}
 
