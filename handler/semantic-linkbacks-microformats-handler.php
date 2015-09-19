@@ -59,10 +59,11 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 		$class_mapper['favorite-of'] = 'favorite';
 
 		/*
-		 * mentions
-		 * @link http://indiewebcamp.com/mentions
+		 * bookmark
+		 * @link http://indiewebcamp.com/bookmark
 		 */
-		//$class_mapper["mention"] = "mention";
+		$class_mapper['bookmark'] = 'bookmark';
+		$class_mapper['bookmark-of'] = 'bookmark';
 
 		/*
 		 * rsvp
@@ -92,7 +93,7 @@ class SemanticLinkbacksPlugin_MicroformatsHandler {
 		 * @link http://indiewebcamp.com/in-reply-to
 		 */
 		$rel_mapper['in-reply-to'] = 'reply';
-		$rel_mapper['reply-of']	= 'reply';
+		$rel_mapper['reply-of'] = 'reply';
 
 		return apply_filters( 'semantic_linkbacks_microformats_rel_mapper', $rel_mapper );
 	}

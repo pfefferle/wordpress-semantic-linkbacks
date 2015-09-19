@@ -3,17 +3,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Semantic-Linkbacks 3.0.5\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/semantic-linkbacks\n"
-"POT-Creation-Date: 2015-04-06 09:59:36+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/semantic-linkbacks\n"
+"POT-Creation-Date: 2015-09-14 22:30+0200\n"
+"PO-Revision-Date: 2015-09-14 22:32+0200\n"
+"Last-Translator: Matthias Pfefferle <pfefferle@gmail.com>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-04-06 12:07+0100\n"
-"X-Generator: Poedit 1.7.5\n"
-"Last-Translator: Matthias Pfefferle <matthias@pfefferle.org>\n"
-"Language-Team: \n"
+"X-Generator: Poedit 1.8.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: de_DE\n"
 
 #: semantic-linkbacks.php:180
 msgid "%1$s mentioned %2$s on <a href=\"%3$s\">%4$s</a>"
@@ -40,91 +40,99 @@ msgid "%1$s tagged %2$s on <a href=\"%3$s\">%4$s</a>"
 msgstr "%1$s \"tagged\" %2$s auf <a href=\"%3$s\">%4$s</a>"
 
 #: semantic-linkbacks.php:187
+msgid "%1$s bookmarked %2$s on <a href=\"%3$s\">%4$s</a>"
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> ge-bookmarked."
+
+#: semantic-linkbacks.php:188
 msgid "%1$s is <strong>attending</strong>"
 msgstr "%1$s <strong>nimmt teil</strong>"
 
-#: semantic-linkbacks.php:188
+#: semantic-linkbacks.php:189
 msgid "%1$s is <strong>not attending</strong>"
 msgstr "%1$s <strong>nimmt teil</strong>"
 
-#: semantic-linkbacks.php:189
+#: semantic-linkbacks.php:190
 msgid "Maybe %1$s will be <strong>attending</strong>"
 msgstr "%1$s <strong>nimmt vielleicht teil</strong>"
 
-#: semantic-linkbacks.php:190
+#: semantic-linkbacks.php:191
 msgid "%1$s is <strong>invited</strong>"
 msgstr "%1$s ist <strong>eingeladen</strong>"
 
-#: semantic-linkbacks.php:191
+#: semantic-linkbacks.php:192
 msgid "%1$s <strong>tracks</strong> this event"
 msgstr "%1$s <strong>verfolgt</strong> diesen Event"
 
-#: semantic-linkbacks.php:204
+#: semantic-linkbacks.php:206
 msgid "Mention"
 msgstr "Erwähnung"
 
-#: semantic-linkbacks.php:206
+#: semantic-linkbacks.php:208
 msgid "Reply"
 msgstr "Antwort"
 
-#: semantic-linkbacks.php:207
+#: semantic-linkbacks.php:209
 msgid "Repost"
 msgstr "Repost"
 
-#: semantic-linkbacks.php:208
+#: semantic-linkbacks.php:210
 msgid "Like"
 msgstr "Like"
 
-#: semantic-linkbacks.php:209
+#: semantic-linkbacks.php:211
 msgid "Favorite"
 msgstr "Favorite"
 
-#: semantic-linkbacks.php:210
+#: semantic-linkbacks.php:212
 msgid "Tag"
 msgstr "Tag"
 
-#: semantic-linkbacks.php:211 semantic-linkbacks.php:212 semantic-linkbacks.php:213
-#: semantic-linkbacks.php:214 semantic-linkbacks.php:215
+#: semantic-linkbacks.php:213
+msgid "Bookmark"
+msgstr "Lesezeichen"
+
+#: semantic-linkbacks.php:214 semantic-linkbacks.php:215 semantic-linkbacks.php:216
+#: semantic-linkbacks.php:217 semantic-linkbacks.php:218
 msgid "RSVP"
 msgstr "RSVP"
 
-#: semantic-linkbacks.php:228
+#: semantic-linkbacks.php:232
 msgid "this Article"
 msgstr "diesen Artikel"
 
-#: semantic-linkbacks.php:230
+#: semantic-linkbacks.php:234
 msgid "this Aside"
 msgstr "dieses Kommentar"
 
-#: semantic-linkbacks.php:231
+#: semantic-linkbacks.php:235
 msgid "this Chat"
 msgstr "diesen Chat"
 
-#: semantic-linkbacks.php:232
+#: semantic-linkbacks.php:236
 msgid "this Gallery"
 msgstr "diese Gallerie"
 
-#: semantic-linkbacks.php:233
+#: semantic-linkbacks.php:237
 msgid "this Link"
 msgstr "diesen Link"
 
-#: semantic-linkbacks.php:234
+#: semantic-linkbacks.php:238
 msgid "this Image"
 msgstr "dieses Bild"
 
-#: semantic-linkbacks.php:235
+#: semantic-linkbacks.php:239
 msgid "this Quote"
 msgstr "dieses Zitat"
 
-#: semantic-linkbacks.php:236
+#: semantic-linkbacks.php:240
 msgid "this Status"
 msgstr "diese Status-Meldung"
 
-#: semantic-linkbacks.php:237
+#: semantic-linkbacks.php:241
 msgid "this Video"
 msgstr "dieses Video"
 
-#: semantic-linkbacks.php:238
+#: semantic-linkbacks.php:242
 msgid "this Audio"
 msgstr "dieses Audio-Dokument"
 
@@ -141,9 +149,12 @@ msgid "Semantic Linkbacks for WebMentions, Trackbacks and Pingbacks"
 msgstr "Semantic Linkbacks für WebMentions, Trackbacks and Pingbacks"
 
 #. Author of the plugin/theme
-msgid "pfefferle & acegiak"
-msgstr "pfefferle & acegiak"
+msgid "pfefferle"
+msgstr "pfeffere"
 
 #. Author URI of the plugin/theme
 msgid "http://notizblog.org/"
 msgstr "http://notizblog.org/"
+
+#~ msgid "pfefferle & acegiak"
+#~ msgstr "pfefferle & acegiak"
