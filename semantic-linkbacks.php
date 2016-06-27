@@ -476,6 +476,17 @@ class SemanticLinkbacksPlugin {
 			$classes = array_unique( $classes );
 		}
 
+		// add host to classnames
+		$url = self::get_url( $comment );
+		$host = parse_url( $url, PHP_URL_HOST );
+		$host = preg_replace( '/^www\./', '', $host );
+		$host = strtok( $host, '.' );
+		$host_class = array( 'via-' . $host );
+		if ( isset( $host_class  ) ) {
+			$classes = array_merge( $classes, $host_class );
+			$classes = array_unique( $classes );
+		}
+
 		return $classes;
 	}
 
