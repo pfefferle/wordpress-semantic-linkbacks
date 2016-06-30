@@ -14,9 +14,9 @@
 // FIXME: Technically it can run just not without the MF2 functionality
 // But what does it do if not MF2 parsing?
 function semantic_linkbacks_activation() {
-		if ( version_compare( phpversion(), 5.3, '<' ) ) {
-					die( 'The minimum PHP version required for this plugin is 5.3' );
-						}
+	if ( version_compare( phpversion(), 5.3, '<' ) ) {
+			die( 'The minimum PHP version required for this plugin is 5.3' );
+	}
 }
 register_activation_hook( __FILE__, 'semantic_linkbacks_activation' );
 

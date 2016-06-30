@@ -16,7 +16,7 @@ class Linkbacks_MF2_Handler {
 	 * initialize the plugin, registering WordPess hooks.
 	 */
 	public static function init() {
-		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_MF2_Handler', 'generate_commentdata' ), 1, 4 );
+		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_MF2_Handler', 'generate_commentdata' ), 1, 3 );
 	}
 
 	/**
@@ -105,14 +105,14 @@ class Linkbacks_MF2_Handler {
 	 *
 	 * @return array
 	 */
-	public static function generate_commentdata( $commentdata, $target, $html ) {
+	public static function generate_commentdata( $commentdata, $target ) {
 		global $wpdb;
 
 		// add source
 		$source = $commentdata['comment_author_url'];
 
 		// parse source html
-		$parser = new Parser( $html, $source );
+		$parser = new Parser( $commentdata['remote_source_original'], $source );
 		$mf_array = $parser->parse( true );
 
 		// get all 'relevant' entries
@@ -172,27 +172,27 @@ class Linkbacks_MF2_Handler {
 			}
 
 			if ( self::check_mf_attr( 'url', $author ) ) {
-				$commentdata['_author_url'] = esc_url_raw( $author['url'][0] );
+				$commentdata['comment_meta']['semantic_linkbacks_author_url'] = esc_url_raw( $author['url'][0] );
 			}
 
 			if ( self::check_mf_attr( 'photo', $author ) ) {
-				$commentdata['_avatar'] = esc_url_raw( $author['photo'][0] );
+				$commentdata['comment_meta']['semantic_linkbacks_avatar'] = esc_url_raw( $author['photo'][0] );
 			}
 		}
 
 		// set canonical url (u-url)
 		if ( self::check_mf_attr( 'url', $properties ) ) {
-			$commentdata['_canonical'] = esc_url_raw( $properties['url'][0] );
+			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $properties['url'][0] );
 		} else {
-			$commentdata['_canonical'] = esc_url_raw( $source );
+			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
 		}
 
 		// check rsvp property
 		if ( self::check_mf_attr( 'rsvp', $properties ) ) {
-			$commentdata['_type'] = wp_slash( 'rsvp:'.$properties['rsvp'][0] );
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:'.$properties['rsvp'][0] );
 		} else {
 			// get post type
-			$commentdata['_type'] = wp_slash( self::get_entry_type( $target, $entry, $mf_array ) );
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $target, $entry, $mf_array ) );
 		}
 
 		return $commentdata;
