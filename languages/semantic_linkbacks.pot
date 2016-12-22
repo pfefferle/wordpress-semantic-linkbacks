@@ -15,51 +15,51 @@ msgstr ""
 "X-Generator: grunt-wp-i18n 0.4.9\n"
 
 #: includes/class-linkbacks-handler.php:169
-msgid "%1$s mentioned %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s mentioned %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:171
-msgid "%1$s replied to %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s replied to %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:172
-msgid "%1$s reposted %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s reposted %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:173
-msgid "%1$s liked %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s liked %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:174
-msgid "%1$s favorited %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s favorited %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:175
-msgid "%1$s tagged %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s tagged %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:176
-msgid "%1$s bookmarked %2$s on <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s bookmarked %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:177
-msgid "%1$s is <strong>attending</strong>"
+msgid "%1$s is <strong>attending</strong>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:178
-msgid "%1$s is <strong>not attending</strong>"
+msgid "%1$s is <strong>not attending</strong>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:179
-msgid "Maybe %1$s will be <strong>attending</strong>"
+msgid "Maybe %1$s will be <strong>attending</strong>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:180
-msgid "%1$s is <strong>invited</strong>"
+msgid "%1$s is <strong>invited</strong>."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:181
-msgid "%1$s <strong>tracks</strong> this event"
+msgid "%1$s <strong>tracks</strong> this event."
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:195

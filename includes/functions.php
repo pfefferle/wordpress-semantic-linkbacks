@@ -8,9 +8,9 @@
  *
  * @return the number of matching linkbacks
  */
-function get_linkbacks_number( $type = null, $post_ID = 0 ) {
+function get_linkbacks_number( $type = null, $post_id = 0 ) {
 	$args = array(
-		'post_id'	=> $post_ID,
+		'post_id'	=> $post_id,
 		'count'	 	=> true,
 		'status'	=> 'approve',
 	);
@@ -37,9 +37,9 @@ function get_linkbacks_number( $type = null, $post_ID = 0 ) {
  *
  * @return the matching linkback "comments"
  */
-function get_linkbacks( $type = null, $post_ID = 0 ) {
+function get_linkbacks( $type = null, $post_id = 0 ) {
 	$args = array(
-		'post_id'	=> $post_ID,
+		'post_id'	=> $post_id,
 		'status'	=> 'approve',
 	);
 

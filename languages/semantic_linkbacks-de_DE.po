@@ -5,63 +5,63 @@ msgstr ""
 "Project-Id-Version: Semantic-Linkbacks 3.0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/semantic-linkbacks\n"
 "POT-Creation-Date: 2015-09-14 22:30+0200\n"
-"PO-Revision-Date: 2015-09-14 22:32+0200\n"
+"PO-Revision-Date: 2016-11-08 20:04+0100\n"
 "Last-Translator: Matthias Pfefferle <pfefferle@gmail.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: semantic-linkbacks.php:180
-msgid "%1$s mentioned %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s erwähnte %2$s auf <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s mentioned %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> erwähnt."
 
 #: semantic-linkbacks.php:182
-msgid "%1$s replied to %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s antwortete auf %2$s auf <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s replied to %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> geantwortet."
 
 #: semantic-linkbacks.php:183
-msgid "%1$s reposted %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> ge-\"reposted\""
+msgid "%1$s reposted %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> geteilt."
 
 #: semantic-linkbacks.php:184
-msgid "%1$s liked %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> ge-\"liked\""
+msgid "%1$s liked %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> geliked."
 
 #: semantic-linkbacks.php:185
-msgid "%1$s favorited %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s favorisierte %2$s auf <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s favorited %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> favorisiert."
 
 #: semantic-linkbacks.php:186
-msgid "%1$s tagged %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s \"tagged\" %2$s auf <a href=\"%3$s\">%4$s</a>"
+msgid "%1$s tagged %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> markiert."
 
 #: semantic-linkbacks.php:187
-msgid "%1$s bookmarked %2$s on <a href=\"%3$s\">%4$s</a>"
-msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> ge-bookmarked."
+msgid "%1$s bookmarked %2$s on <a href=\"%3$s\">%4$s</a>."
+msgstr "%1$s hat %2$s auf <a href=\"%3$s\">%4$s</a> als Lesezeichen gespeichert."
 
 #: semantic-linkbacks.php:188
-msgid "%1$s is <strong>attending</strong>"
-msgstr "%1$s <strong>nimmt teil</strong>"
+msgid "%1$s is <strong>attending</strong>."
+msgstr "%1$s <strong>nimmt teil</strong>."
 
 #: semantic-linkbacks.php:189
-msgid "%1$s is <strong>not attending</strong>"
-msgstr "%1$s <strong>nimmt teil</strong>"
+msgid "%1$s is <strong>not attending</strong>."
+msgstr "%1$s <strong>nimmt nicht teil</strong>."
 
 #: semantic-linkbacks.php:190
-msgid "Maybe %1$s will be <strong>attending</strong>"
-msgstr "%1$s <strong>nimmt vielleicht teil</strong>"
+msgid "Maybe %1$s will be <strong>attending</strong>."
+msgstr "%1$s <strong>nimmt vielleicht teil</strong>."
 
 #: semantic-linkbacks.php:191
-msgid "%1$s is <strong>invited</strong>"
-msgstr "%1$s ist <strong>eingeladen</strong>"
+msgid "%1$s is <strong>invited</strong>."
+msgstr "%1$s ist <strong>eingeladen</strong>."
 
 #: semantic-linkbacks.php:192
-msgid "%1$s <strong>tracks</strong> this event"
-msgstr "%1$s <strong>verfolgt</strong> diesen Event"
+msgid "%1$s <strong>tracks</strong> this event."
+msgstr "%1$s <strong>verfolgt</strong> diese Veranstaltung."
 
 #: semantic-linkbacks.php:206
 msgid "Mention"
@@ -91,8 +91,9 @@ msgstr "Tag"
 msgid "Bookmark"
 msgstr "Lesezeichen"
 
-#: semantic-linkbacks.php:214 semantic-linkbacks.php:215 semantic-linkbacks.php:216
-#: semantic-linkbacks.php:217 semantic-linkbacks.php:218
+#: semantic-linkbacks.php:214 semantic-linkbacks.php:215
+#: semantic-linkbacks.php:216 semantic-linkbacks.php:217
+#: semantic-linkbacks.php:218
 msgid "RSVP"
 msgstr "RSVP"
 
@@ -102,15 +103,15 @@ msgstr "diesen Artikel"
 
 #: semantic-linkbacks.php:234
 msgid "this Aside"
-msgstr "dieses Kommentar"
+msgstr "diese Kurzmitteilung"
 
 #: semantic-linkbacks.php:235
 msgid "this Chat"
-msgstr "diesen Chat"
+msgstr "dieses Chatprotokoll"
 
 #: semantic-linkbacks.php:236
 msgid "this Gallery"
-msgstr "diese Gallerie"
+msgstr "diese Galerie"
 
 #: semantic-linkbacks.php:237
 msgid "this Link"
@@ -126,7 +127,7 @@ msgstr "dieses Zitat"
 
 #: semantic-linkbacks.php:240
 msgid "this Status"
-msgstr "diese Status-Meldung"
+msgstr "diese Statusmitteilung"
 
 #: semantic-linkbacks.php:241
 msgid "this Video"

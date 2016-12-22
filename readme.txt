@@ -2,9 +2,9 @@
 Contributors: pfefferle
 Donate link: http://14101978.de
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
-Requires at least: 4.3
-Tested up to: 4.5.3
-Stable tag: 3.2.0
+Requires at least: 4.6
+Tested up to: 4.6.1
+Stable tag: 3.2.1
 
 Richer Comments and Linkbacks for WordPress!
 
@@ -50,6 +50,10 @@ The WebMention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 == Changelog ==
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks).
+
+= 3.2.1 =
+
+* updated hooks/filters
 
 = 3.2.0 =
 
