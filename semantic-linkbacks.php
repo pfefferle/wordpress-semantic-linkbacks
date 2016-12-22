@@ -15,11 +15,7 @@
 // But what does it do if not MF2 parsing?
 function semantic_linkbacks_activation() {
 	if ( version_compare( phpversion(), 5.3, '<' ) ) {
-<<<<<<< HEAD
-			die( 'The minimum PHP version required for this plugin is 5.3' );
-=======
 		die( 'The minimum PHP version required for this plugin is 5.3' );
->>>>>>> d71059f7941a7ff338cccdebfc5cdd89cb380fb8
 	}
 }
 register_activation_hook( __FILE__, 'semantic_linkbacks_activation' );
