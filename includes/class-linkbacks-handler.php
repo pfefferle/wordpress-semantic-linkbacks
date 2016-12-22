@@ -14,6 +14,8 @@ class Linkbacks_Handler {
 	 */
 	public static function init() {
 		// hook into linkback functions to add more semantics
+		// Hooking enhancements into preprocess_comment means they run before spam detection and notification emails - awaiting further testing.
+		// add_filter( 'preprocess_comment', array( 'Linkbacks_Handler', 'pre_enhance' ), 0 );
 		// FIXME temporarily removed because it does not support updates
 		// add_action( 'comment_post', array( 'Linkbacks_Handler', 'linkback_fix' ), 9 );
 		add_action( 'pingback_post', array( 'Linkbacks_Handler', 'linkback_fix' ), 9 );
@@ -55,7 +57,59 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	 * Nicer semantic linkbacks
+	 * Enhance a Comment before it is Added to the Database
+	 */
+	public static function pre_enhance( $commentdata ) {
+		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
+			return $commentdata;
+		}
+		return self::enhance( $commentdata );
+	}
+
+	/**
+	 * Filter commentdata to create nicer linkbacks
+	 *
+	 * @param array $commentdata
+	 *
+	 * @return array $commentdata
+	*/
+	public static function enhance( $commentdata ) {
+		if ( ! array_key_exists( 'remote_source_original', $commentdata ) ) {
+			$response = self::retrieve( $commentdata['comment_author_url'] );
+			// handle errors
+			if ( is_wp_error( $response ) ) {
+				return $commentdata;
+			}
+			// get HTML code of source url - matching the format used by new pingbacks
+			$commentdata['remote_source_original'] = wp_remote_retrieve_body( $response );
+			$commentdata['remote_source'] = wp_kses_post( $commentdata['remote_source_original'] );
+			$commentdata['content_type']  = wp_remote_retrieve_header( $response, 'content-type' );
+		}
+
+		if ( ! array_key_exists( 'comment_meta', $commentdata ) ) {
+			$commentdata['comment_meta'] = array();
+		}
+		// generate target
+		$target = get_permalink( $commentdata['comment_post_ID'] );
+		// add replytocom if present
+		if ( isset( $commentdata['comment_parent'] ) && ! empty( $commentdata['comment_parent'] ) ) {
+			$target = add_query_arg( array( 'replytocom' => $commentdata['comment_parent'] ), $target );
+		}
+		// add source url as comment-meta
+		$commentdata['comment_meta']['semantic_linkbacks_source'] = esc_url_raw( $commentdata['comment_author_url'] );
+		// adds a hook to enable some other semantic handlers for example schema.org
+		$commentdata = apply_filters( 'semantic_linkbacks_commentdata', $commentdata, $target );
+		// remove "webmention" comment-type if $type is "reply"
+		if ( isset( $commentdata['comment_meta']['semantic_linkbacks_type'] ) ) {
+			if ( in_array( $commentdata['comment_meta']['semantic_linkbacks_type'], apply_filters( 'semantic_linkbacks_comment_types', array( 'reply' ) ) ) ) {
+				$commentdata['comment_type'] = '';
+			}
+		}
+		return $commentdata;
+	}
+
+	/**
+	 * Enhance or replace existing comment
 	 *
 	 * @param int $comment_id the comment id
 	 */
@@ -99,51 +153,21 @@ class Linkbacks_Handler {
 			return $comment_id;
 		}
 
-		// generate target
-		$target = get_permalink( $post['ID'] );
-
-		// add replytocom if present
-		if ( isset( $commentdata['comment_parent'] ) && ! empty( $commentdata['comment_parent'] ) ) {
-			$target = add_query_arg( array( 'replytocom' => $commentdata['comment_parent'] ), $target );
+		// Mirror the comment data array used in wp_new_comment
+		if ( ! array_key_exists( 'comment_meta', $commentdata ) ) {
+			$commentdata['comment_meta'] = array();
 		}
 
-		// get remote html
-		$response = self::retrieve( esc_url_raw( html_entity_decode( $source ) ) );
-
-		// handle errors
-		if ( is_wp_error( $response ) ) {
-			return $comment_id;
-		}
-
-		// get HTML code of source url
-		$html = wp_remote_retrieve_body( $response );
-
-		// add source url as comment-meta
-		update_comment_meta( $commentdata['comment_ID'], 'semantic_linkbacks_source', esc_url_raw( $commentdata['comment_author_url'] ), true );
-
-		// adds a hook to enable semantic handlers including microformats or for example schema.org
-		$commentdata = apply_filters( 'semantic_linkbacks_commentdata', $commentdata, $target, $html );
+		$commentdata = self::enhance( $commentdata );
 
 		// check if comment-data is empty
 		if ( empty( $commentdata ) ) {
 			return $comment_id;
 		}
 
-		// remove "webmention" comment-type if $type is "reply"
-		if ( isset( $commentdata['_type'] ) &&
-			in_array( $commentdata['_type'], apply_filters( 'semantic_linkbacks_comment_types', array( 'reply' ) ) ) ) {
-			global $wpdb;
-			$wpdb->update( $wpdb->comments, array( 'comment_type' => '' ), array( 'comment_ID' => $commentdata['comment_ID'] ) );
-
-			$commentdata['comment_type'] = '';
-		}
-
-		// save custom comment properties as comment-metas
-		foreach ( $commentdata as $key => $value ) {
-			if ( 0 === strpos( $key, '_' ) ) {
-				update_comment_meta( $commentdata['comment_ID'], 'semantic_linkbacks' . $key, $value, true );
-				unset( $commentdata[ $key ] );
-			}
+		// save custom comment properties as comment-meta
+		foreach ( $commentdata['comment_meta'] as $key => $value ) {
+			update_comment_meta( $commentdata['comment_ID'], $key, $value, true );
 		}
 
 		// disable flood control
