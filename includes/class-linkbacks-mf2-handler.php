@@ -106,137 +106,163 @@ class Linkbacks_MF2_Handler {
 	public static function generate_commentdata( $commentdata ) {
 		global $wpdb;
 
-		// add source
-		$source = $commentdata['comment_author_url'];
+		// Use new webmention source meta key.
+		if ( array_key_exists( 'webmention_source_url', $commentdata['comment_meta'] ) ) {
+			$source = $commentdata['comment_meta']['webmention_source_url'];
+		} // Fallback to comment author url.
+		else {
+			$source = $commentdata['comment_author_url'];
+		}
 
 		// parse source html
 		$parser = new Parser( $commentdata['remote_source_original'], $source );
 		$mf_array = $parser->parse( true );
-
 		// get all 'relevant' entries
-		$entries = self::get_entries( $mf_array );
+		$commentdata['remote_source_mf2'] = $item = self::get_representative_item( $mf_array, $source );
 
-		if ( empty( $entries ) ) {
-			return array();
+		if ( ! $item ) {
+			// If the system could not find any types then declare it a mention and give up
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'mention' );
+			return $commentdata;
+		}
+		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $item ) );
+
+		// set the right date
+		if ( array_key_exists( 'published', $properties ) ) {
+			$commentdata['comment_date'] = self::convert_time( $properties['published'] );
+		} elseif ( array_key_exists( 'updated', $properties ) ) {
+			$commentdata['comment_date'] = self::convert_time( $properties['updated'] );
 		}
 
-		// get the entry of interest
-		$entry = self::get_representative_entry( $entries, $commentdata['target'] );
-
-		if ( empty( $entry ) ) {
-			return array();
+		// set canonical url (u-url)
+		if ( array_key_exists( 'url', $properties ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'];
 		}
-
-		// the entry properties
-		$properties = $entry['properties'];
 
 		// try to find some content
 		// @link http://indiewebcamp.com/comments-presentation
-		if ( self::check_mf_attr( 'summary', $properties ) ) {
-			$commentdata['comment_content'] = wp_slash( $properties['summary'][0] );
-		} elseif ( self::check_mf_attr( 'content', $properties ) ) {
-			$commentdata['comment_content'] = wp_filter_kses( $properties['content'][0]['html'] );
-		} elseif ( self::check_mf_attr( 'name', $properties ) ) {
-			$commentdata['comment_content'] = wp_slash( $properties['name'][0] );
+		if ( array_key_exists( 'summary', $properties ) ) {
+			$commentdata['comment_content'] = wp_slash( $properties['summary'] );
+		} elseif ( array_key_exists( 'content', $properties ) ) {
+			$commentdata['comment_content'] = wp_filter_kses( $properties['content']['html'] );
+		} elseif ( array_key_exists( 'name', $properties ) ) {
+			$commentdata['comment_content'] = wp_slash( $properties['name'] );
 		}
 		$commentdata['comment_content'] = trim( $commentdata['comment_content'] );
-
-		// set the right date
-		if ( self::check_mf_attr( 'published', $properties ) ) {
-			$time = strtotime( $properties['published'][0] );
-			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
-		} elseif ( self::check_mf_attr( 'updated', $properties ) ) {
-			$time = strtotime( $properties['updated'][0] );
-			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
-		}
 
 		$author = null;
 
 		// check if h-card has an author
-		if ( isset( $properties['author'] ) && isset( $properties['author'][0]['properties'] ) ) {
-			$author = $properties['author'][0]['properties'];
+		if ( isset( $properties['author'] ) ) {
+			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
 		}
 
 		// if author is present use the informations for the comment
 		if ( $author ) {
-			if ( self::check_mf_attr( 'name', $author ) ) {
-				$commentdata['comment_author'] = wp_slash( $author['name'][0] );
+			if ( ! is_array( $author ) ) {
+				$comment_data['comment_author'] = wp_slash( $author );
+			} else {
+				if ( array_key_exists( 'name', $author ) ) {
+					$commentdata['comment_author'] = $author['name'];
+				}
+				if ( array_key_exists( 'email', $author ) ) {
+					$commentdata['comment_author_email'] = $author['email'];
+				}
+				if ( array_key_exists( 'url', $author ) ) {
+					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+				}
+				if ( array_key_exists( 'photo', $author ) ) {
+					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
+				}
 			}
-
-			if ( self::check_mf_attr( 'email', $author ) ) {
-				$commentdata['comment_author_email'] = wp_slash( $author['email'][0] );
-			}
-
-			if ( self::check_mf_attr( 'url', $author ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_author_url'] = esc_url_raw( $author['url'][0] );
-			}
-
-			if ( self::check_mf_attr( 'photo', $author ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_avatar'] = esc_url_raw( $author['photo'][0] );
-			}
-		}
-
-		// set canonical url (u-url)
-		if ( self::check_mf_attr( 'url', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $properties['url'][0] );
-		} else {
-			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
 		}
 
 		// check rsvp property
-		if ( self::check_mf_attr( 'rsvp', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'][0] );
+		if ( array_key_exists( 'rsvp', $properties ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = 'rsvp:' . $properties['rsvp'];
 		} else {
 			// get post type
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = self::get_entry_type( $commentdata['target'], $item, $mf_array );
 		}
-
-		return $commentdata;
-	}
-
-	/**
-	 * get all h-entry items
-	 *
-	 * @param array $mf_array the microformats array
-	 * @param array the h-entry array
-	 *
-	 * @return array
-	 */
-	public static function get_entries( $mf_array ) {
-		$entries = array();
-
-		// some basic checks
-		if ( ! is_array( $mf_array ) ) {
-			return $entries;
-		}
-		if ( ! isset( $mf_array['items'] ) ) {
-			return $entries;
-		}
-		if ( 0 == count( $mf_array['items'] ) ) {
-			return $entries;
-		}
-
-		// get first item
-		$first_item = $mf_array['items'][0];
-
-		// check if it is an h-feed
-		if ( isset( $first_item['type'] ) &&
-			in_array( 'h-feed', $first_item['type'] ) &&
-			isset( $first_item['children'] ) ) {
-			$mf_array['items'] = $first_item['children'];
-		}
-
-		// iterate array
-		foreach ( $mf_array['items'] as $mf ) {
-			if ( isset( $mf['type'] ) && in_array( 'h-entry', $mf['type'] ) ) {
-				$entries[] = $mf;
+		$blacklist = array();
+		// $blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url' );
+		foreach ( $properties as $key => $value ) {
+			if ( ! in_array( $key, $blacklist ) ) {
+				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
 			}
 		}
 
-		// return entries
-		return $entries;
+		$commentdata['comment_meta'] = array_filter( $commentdata['comment_meta'] );
+		return $commentdata;
+
+	}
+
+	public static function convert_time( $time ) {
+		$time = strtotime( $time );
+		return get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+	}
+
+	public static function get_property( $key, $properties ) {
+		if ( isset( $properties[ $key ] ) && isset( $properties[ $key ][0] ) ) {
+			$properties[ $key ] = array_unique( $properties[ $key ] );
+			if ( 1 === count( $properties[ $key ] ) ) {
+				return $properties[ $key ][0];
+			}
+			return $properties[ $key ];
+		}
+		return null;
+	}
+
+	/**
+	 * Is string a URL.
+		 *
+	 * @param array $string
+	 * @return bool
+	 */
+	public static function is_url( $string ) {
+		if ( ! is_string( $string ) ) {
+			return false;
+		}
+		return preg_match( '/^https?:\/\/.+\..+$/', $string );
+	}
+
+	// Accepted h types
+	public static function is_h( $string ) {
+		return in_array( $string, array( 'h-cite', 'h-entry', 'h-feed', 'h-product', 'h-event', 'h-review', 'h-recipe' ) );
+	}
+
+	public static function flatten_microformats( $item ) {
+		$flat = array();
+		if ( 1 === count( $item ) ) {
+			$item = $item[0];
+		}
+		if ( array_key_exists( 'type', $item ) ) {
+			// If there are multiple types strip out everything but the standard one.
+			if ( 1 < count( $item['type'] ) ) {
+				$item['type'] = array_filter( $item['type'], array( 'Linkbacks_MF2_Handler', 'is_h' ) );
+			}
+			$flat['type'] = $item['type'][0];
+		}
+		if ( array_key_exists( 'properties', $item ) ) {
+			$properties = $item['properties'];
+			foreach ( $properties as $key => $value ) {
+				$flat[ $key ] = self::get_property( $key, $properties );
+				if ( 1 < count( $flat[ $key ] ) ) {
+					$flat[ $key ] = self::flatten_microformats( $flat[ $key ] );
+				}
+			}
+		} else {
+			$flat = $item;
+		}
+		foreach ( $flat as $key => $value ) {
+			// Sanitize all URL properties
+			if ( self::is_url( $value ) ) {
+				$flat[ $key ] = esc_url_raw( $value );
+			}
+		}
+		return array_filter( $flat );
 	}
 
 	/**
@@ -268,56 +294,62 @@ class Linkbacks_MF2_Handler {
 	}
 
 	/**
-	 * helper to find the correct h-entry node
+	 * helper to find the representative item
 	 *
 	 * @param array $mf_array the parsed microformats array
 	 * @param string $target the target url
 	 *
-	 * @return array the h-entry node or false
+	 * @return array representative item or false if none
 	 */
-	public static function get_representative_entry( $entries, $target ) {
-		// iterate array
-		foreach ( $entries as $entry ) {
+	public static function get_representative_item( $mf_array, $target ) {
+		// some basic checks
+		if ( ! is_array( $mf_array ) ) {
+			return false;
+		}
+		if ( ! isset( $mf_array['items'] ) ) {
+			return false;
+		}
+		$items = $mf_array['items'];
+		if ( 0 == count( $items ) ) {
+			return false;
+		}
+
+		if ( 1 == count( $items ) ) {
+			// return first item
+			return $items[0];
+		}
+
+		// Else look for the top level item that matches the URL
+		foreach ( $items as $item ) {
 			// check properties
-			if ( isset( $entry['properties'] ) ) {
-				// check properties if target urls was mentioned
-				foreach ( $entry['properties'] as $key => $values ) {
-					// check "normal" links
-					if ( self::compare_urls( $target, $values ) ) {
-						return $entry;
-					}
-
-					// check included h-* formats and their links
-					foreach ( $values as $obj ) {
-						// check if reply is a "cite"
-						if ( isset( $obj['type'] ) && array_intersect( array( 'h-cite', 'h-entry' ), $obj['type'] ) ) {
-							// check url
-							if ( isset( $obj['properties'] ) && isset( $obj['properties']['url'] ) ) {
-								// check target
-								if ( self::compare_urls( $target, $obj['properties']['url'] ) ) {
-									return $entry;
-								}
-							}
-						}
-					}
-				}
-
-				// check properties if target urls was mentioned
-				foreach ( $entry['properties'] as $key => $values ) {
-					// check content for the link
-					if ( 'content' == $key &&
-						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i', $values[0]['html'], $context ) ) {
-						return $entry;
-					} elseif ( 'summary' == $key &&
-						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i',  $values[0], $context ) ) {
-						return $entry;
+			if ( array_key_exists( 'url', $item['properties'] ) ) {
+				$urls = $item['properties']['url'];
+				if ( self::compare_urls( $target, $urls ) ) {
+					if ( ! in_array( 'h-feed', $item['type'] ) ) {
+						return $item;
 					}
 				}
 			}
 		}
-
-		// return first h-entry
-		return $entries[0];
+		// Check for an h-card matching rel=author or the author URL of any h-* on the page and return the h-* object if so
+		if ( isset( $mf_array['rels']['author'] ) ) {
+			foreach ( $items as $card ) {
+				if ( in_array( 'h-card', $card['type'] ) && array_key_exists( 'url', $card['properties'] ) ) {
+					$urls = $card['properties']['url'];
+					if ( count( array_intersect( $urls, $mf_array['rels']['author'] ) ) > 0 ) {
+						// There is an author h-card on this page
+						// Now look for the first h-* object other than an h-card and use that as the object
+						foreach ( $items as $item ) {
+							if ( ! in_array( 'h-card', $item['type'] ) ) {
+								return $item;
+							}
+						}
+					}
+				}
+			}
+		}
+		// Not Sure What This Is
+		return false;
 	}
 
 	/**
@@ -344,11 +376,11 @@ class Linkbacks_MF2_Handler {
 				// iterate in-reply-tos
 				foreach ( $values as $obj ) {
 					// check if reply is a "cite" or "entry"
-					if ( isset( $obj['type'] ) && array_intersect( array( 'h-cite', 'h-entry' ), $obj['type'] ) ) {
+					if ( isset( $obj['type'] ) && in_array( $obj['type'], array( 'h-cite', 'h-entry' ) ) ) {
 						// check url
-						if ( isset( $obj['properties'] ) && isset( $obj['properties']['url'] ) ) {
+						if ( isset( $obj['url'] ) ) {
 							// check target
-							if ( self::compare_urls( $target, $obj['properties']['url'] ) ) {
+							if ( self::compare_urls( $target, $obj['url'] ) ) {
 								return $classes[ $key ];
 							}
 						}
@@ -380,22 +412,6 @@ class Linkbacks_MF2_Handler {
 	}
 
 	/**
-	 * checks if $node has $key
-	 *
-	 * @param string $key the array key to check
-	 * @param array $node the array to be checked
-	 *
-	 * @return boolean
-	 */
-	public static function check_mf_attr( $key, $node ) {
-		if ( isset( $node[ $key ] ) && isset( $node[ $key ][0] ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * compare an url with a list of urls
 	 *
 	 * @param string $needle the target url
@@ -405,8 +421,11 @@ class Linkbacks_MF2_Handler {
 	 * @return boolean
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
-		if ( ! is_string( $needle ) || ! is_array( $haystack ) ) {
+		if ( ! self::is_url( $needle ) || ! $haystack ) {
 			return false;
+		}
+		if ( ! is_array( $haystack ) && is_url( $haystack ) ) {
+			$haystack = array( $haystack );
 		}
 		if ( true === $schemeless ) {
 			// remove url-scheme

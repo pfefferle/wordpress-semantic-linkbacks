@@ -11,6 +11,7 @@ class MF2_Debugger {
 
 	public static function query_var($vars) {
 		$vars[] = 'sldebug';
+		$vars[] = 'sltarget';
 		return $vars;
 	}
 
@@ -47,6 +48,7 @@ class MF2_Debugger {
 				'comment_type' => 'webmention',
 				'comment_author_url' => $url,
 				'comment_post_ID' => 0,
+				'target' => $wp->get( 'sltarget', '' ),
 				'remote_source_original' => wp_remote_retrieve_body( $response ),
 				);
 			$commentdata = Linkbacks_Handler::enhance( $commentdata );
@@ -57,6 +59,9 @@ class MF2_Debugger {
 				'comment_content',
 				'comment_date',
 				'comment_meta',
+				'target',
+				'remote_source_mf2',
+				// 'remote_source_properties'
 			) );
 			status_header( 200 );
 			echo '<pre>';
@@ -101,6 +106,10 @@ class MF2_Debugger {
 		<p>
 			<?php _e( 'URL:', 'semantic-linkbacks' ); ?>
 		<input type="url" name="sldebug" size="70" />
+		</p>
+		<p> 
+			<?php _e( 'Target:', 'semantic-linkbacks' ); ?>
+		<input type="url" name="sltarget" id="sltarget" size="70" />
 		</p>
 			<input type="submit" />
 	  </form>
