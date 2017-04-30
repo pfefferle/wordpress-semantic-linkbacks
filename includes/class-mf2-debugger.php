@@ -60,8 +60,8 @@ class MF2_Debugger {
 				'comment_date',
 				'comment_meta',
 				'target',
-				'remote_source_mf2',
-				// 'remote_source_properties'
+				'remote_source_rels',
+				'remote_source_properties'
 			) );
 			status_header( 200 );
 			echo '<pre>';

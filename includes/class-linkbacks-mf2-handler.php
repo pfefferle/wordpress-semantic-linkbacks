@@ -126,7 +126,7 @@ class Linkbacks_MF2_Handler {
 			return $commentdata;
 		}
 		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $item ) );
-
+		$commentdata['remote_source_rels'] = $rels = $mf_array['rels'];
 		// set the right date
 		if ( array_key_exists( 'published', $properties ) ) {
 			$commentdata['comment_date'] = self::convert_time( $properties['published'] );
@@ -184,10 +184,9 @@ class Linkbacks_MF2_Handler {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = 'rsvp:' . $properties['rsvp'];
 		} else {
 			// get post type
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = self::get_entry_type( $commentdata['target'], $item, $mf_array );
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = self::get_entry_type( $commentdata['target'], $properties, $rels );
 		}
-		$blacklist = array();
-		// $blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url' );
+		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment' );
 		foreach ( $properties as $key => $value ) {
 			if ( ! in_array( $key, $blacklist ) ) {
 				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
@@ -280,7 +279,7 @@ class Linkbacks_MF2_Handler {
 					// check domain
 					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
 						foreach ( $mf['properties']['url'] as $url ) {
-							if ( parse_url( $url, PHP_URL_HOST ) == parse_url( $source, PHP_URL_HOST ) ) {
+							if ( wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( $source, PHP_URL_HOST ) ) {
 								return $mf['properties'];
 								break;
 							}
@@ -310,11 +309,11 @@ class Linkbacks_MF2_Handler {
 			return false;
 		}
 		$items = $mf_array['items'];
-		if ( 0 == count( $items ) ) {
+		if ( 0 === count( $items ) ) {
 			return false;
 		}
 
-		if ( 1 == count( $items ) ) {
+		if ( 1 === count( $items ) ) {
 			// return first item
 			return $items[0];
 		}
@@ -356,22 +355,22 @@ class Linkbacks_MF2_Handler {
 	 * check entry classes or document rels for post-type
 	 *
 	 * @param string $target the target url
-	 * @param array $entry the represantative entry
-	 * @param array $mf_array the document
+	 * @param array $propeties
+	 * @param array $rels
 	 *
 	 * @return string the post-type
 	 */
-	public static function get_entry_type( $target, $entry, $mf_array = array() ) {
+	public static function get_entry_type( $target, $properties, $rels ) {
 		$classes = self::get_class_mapper();
 
 		// check properties for target-url
-		foreach ( $entry['properties'] as $key => $values ) {
+		foreach ( $properties as $key => $values ) {
 			// check u-* params
 			if ( in_array( $key, array_keys( $classes ) ) ) {
 				// check "normal" links
-				if ( self::compare_urls( $target, $values ) ) {
+				//	if ( self::compare_urls( $target, $values ) ) {
 					return $classes[ $key ];
-				}
+				//	}
 
 				// iterate in-reply-tos
 				foreach ( $values as $obj ) {
@@ -390,19 +389,19 @@ class Linkbacks_MF2_Handler {
 		}
 
 		// check if site has any rels
-		if ( ! isset( $mf_array['rels'] ) ) {
+		if ( ! isset( $rels ) ) {
 			return 'mention';
 		}
 
-		$rels = self::get_rel_mapper();
+		$relmap = self::get_rel_mapper();
 
 		// check rels for target-url
-		foreach ( $mf_array['rels'] as $key => $values ) {
+		foreach ( $relmap as $key => $values ) {
 			// check rel params
-			if ( in_array( $key, array_keys( $rels ) ) ) {
+			if ( in_array( $key, array_keys( $relmap ) ) ) {
 				foreach ( $values as $value ) {
-					if ( $value == $target ) {
-						return $rels[ $key ];
+					if ( $value === $target ) {
+						return $relmap[ $key ];
 					}
 				}
 			}
@@ -421,11 +420,8 @@ class Linkbacks_MF2_Handler {
 	 * @return boolean
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
-		if ( ! self::is_url( $needle ) || ! $haystack ) {
+		if ( ! self::is_url( $needle ) ) {
 			return false;
-		}
-		if ( ! is_array( $haystack ) && is_url( $haystack ) ) {
-			$haystack = array( $haystack );
 		}
 		if ( true === $schemeless ) {
 			// remove url-scheme
@@ -437,7 +433,6 @@ class Linkbacks_MF2_Handler {
 			// make $needle an array
 			$needle = array( $needle );
 		}
-
 		// compare both arrays
 		return array_intersect( $needle, $haystack );
 	}
