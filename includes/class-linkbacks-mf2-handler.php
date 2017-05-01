@@ -189,6 +189,7 @@ class Linkbacks_MF2_Handler {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = self::get_entry_type( $commentdata['target'], $properties, $rels );
 		}
 		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment' );
+		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
 		foreach ( $properties as $key => $value ) {
 			if ( ! in_array( $key, $blacklist ) ) {
 				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
