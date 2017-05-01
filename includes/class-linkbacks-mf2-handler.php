@@ -140,11 +140,13 @@ class Linkbacks_MF2_Handler {
 		}
 
 		// try to find some content
-		// @link http://indiewebcamp.com/comments-presentation
+		// @link http://indieweb.org/comments
 		if ( array_key_exists( 'summary', $properties ) ) {
 			$commentdata['comment_content'] = wp_slash( $properties['summary'] );
 		} elseif ( array_key_exists( 'content', $properties ) ) {
-			$commentdata['comment_content'] = wp_filter_kses( $properties['content']['html'] );
+			if ( array_key_exists( 'html', $properties['content'] ) ) {
+				$commentdata['comment_content'] = wp_filter_kses( $properties['content']['html'] );
+			}
 		} elseif ( array_key_exists( 'name', $properties ) ) {
 			$commentdata['comment_content'] = wp_slash( $properties['name'] );
 		}
