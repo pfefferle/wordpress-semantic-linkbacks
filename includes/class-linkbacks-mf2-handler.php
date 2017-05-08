@@ -29,7 +29,7 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * replies
-		 * @link http://indiewebcamp.com/replies
+		 * @link http://indieweb.org/replies
 		 */
 		$class_mapper['in-reply-to'] = 'reply';
 		$class_mapper['reply'] = 'reply';
@@ -37,43 +37,50 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * repost
-		 * @link http://indiewebcamp.com/repost
+		 * @link http://indieweb.org/repost
 		 */
 		$class_mapper['repost'] = 'repost';
 		$class_mapper['repost-of'] = 'repost';
 
 		/*
 		 * likes
-		 * @link http://indiewebcamp.com/likes
+		 * @link http://indieweb.org/likes
 		 */
 		$class_mapper['like'] = 'like';
 		$class_mapper['like-of'] = 'like';
 
 		/*
 		 * favorite
-		 * @link http://indiewebcamp.com/favorite
+		 * @link http://indieweb.org/favorite
 		 */
 		$class_mapper['favorite'] = 'favorite';
 		$class_mapper['favorite-of'] = 'favorite';
 
 		/*
 		 * bookmark
-		 * @link http://indiewebcamp.com/bookmark
+		 * @link http://indieweb.org/bookmark
 		 */
 		$class_mapper['bookmark'] = 'bookmark';
 		$class_mapper['bookmark-of'] = 'bookmark';
 
 		/*
 		 * rsvp
-		 * @link http://indiewebcamp.com/rsvp
+		 * @link http://indieweb.org/rsvp
 		 */
 		$class_mapper['rsvp'] = 'rsvp';
 
 		/*
 		 * tag
-		 * @link http://indiewebcamp.com/tag
+		 * @link http://indieweb.org/tag
 		 */
 		$class_mapper['tag-of'] = 'tag';
+
+		/*
+		 * quote
+		 * @link http://indieweb.org/quotation
+		 */
+		$class_mapper['quotation-of'] = 'quote';
+
 
 		return apply_filters( 'semantic_linkbacks_microformats_class_mapper', $class_mapper );
 	}
@@ -88,7 +95,7 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * replies
-		 * @link http://indiewebcamp.com/in-reply-to
+		 * @link http://indieweb.org/in-reply-to
 		 */
 		$rel_mapper['in-reply-to'] = 'reply';
 		$rel_mapper['reply-of'] = 'reply';
@@ -241,7 +248,7 @@ class Linkbacks_MF2_Handler {
 			}
 		}
 
-		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment' );
+		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment', 'bridgy-omit-link' );
 		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
 		foreach ( $properties as $key => $value ) {
 			if ( ! in_array( $key, $blacklist ) ) {

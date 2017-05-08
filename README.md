@@ -51,6 +51,14 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.3.2 ###
+* fixed misclassification of types as mention
+* rewrote interpreter code to expand beyond h-entry parsing
+* mf2 properties now stored in comment meta
+* location parameters set per Geodata guidelines
+* blacklist filter created `semantic_linkbacks_mf2_props_blacklist` which filters a blacklist of parameters not saved to meta
+* add quote type for future enhancement
+
 ### 3.3.1 ###
 
 * fixed https://github.com/pfefferle/wordpress-semantic-linkbacks/issues/68
