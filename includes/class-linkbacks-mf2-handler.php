@@ -136,7 +136,11 @@ class Linkbacks_MF2_Handler {
 
 		// set canonical url (u-url)
 		if ( array_key_exists( 'url', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'];
+			if ( self::is_url( $properties['url'] ) ) {
+				$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'];
+			} else {
+				$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'][0];
+			}
 		}
 
 		// try to find some content
@@ -154,18 +158,29 @@ class Linkbacks_MF2_Handler {
 
 		$author = null;
 
-		// check if h-card has an author
+		// check if entry has an author
 		if ( isset( $properties['author'] ) ) {
 			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
+
 		}
 
 		// if author is present use the informations for the comment
 		if ( $author ) {
 			if ( ! is_array( $author ) ) {
-				$comment_data['comment_author'] = wp_slash( $author );
-			} else {
+				if ( self::is_url( $author ) ) {
+					$response = Linkbacks_Handler::retrieve( $author );
+					if ( ! is_wp_error( $response ) ) {
+						$parser = new Parser( wp_remote_retrieve_body( $response ), $author );
+						$author_array = $parser->parse( true );
+						$properties['author'] = $author = self::get_representative_author( $author_array, $author );
+					}
+				} else {
+					$comment_data['comment_author'] = wp_slash( $author );
+				}
+			}
+			if ( is_array( $author ) ) {
 				if ( array_key_exists( 'name', $author ) ) {
 					$commentdata['comment_author'] = $author['name'];
 				}
@@ -173,6 +188,13 @@ class Linkbacks_MF2_Handler {
 					$commentdata['comment_author_email'] = $author['email'];
 				}
 				if ( array_key_exists( 'url', $author ) ) {
+					if ( is_array( $author['url'] ) ) {
+						if ( array_key_exists( 'uid', $author ) && in_array( $author['uid'], $author['url'] ) ) {
+							$author['url'] = $author['uid'];
+						} else {
+							$author['url'] = $author['url'][0];
+						}
+					}
 					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
 				}
 				if ( array_key_exists( 'photo', $author ) ) {
@@ -188,6 +210,37 @@ class Linkbacks_MF2_Handler {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = self::get_entry_type( $commentdata['target'], $properties, $rels );
 		}
+
+		// If u-syndication is not set use rel syndication
+		if ( array_key_exists( 'syndication', $rels ) && ! array_key_exists( 'syndication', $properties ) ) {
+			$properties['syndication'] = $rels['syndication'];
+		}
+		// Check and parse for location property
+		if ( array_key_exists( 'location', $properties ) ) {
+			$location = $properties['location'];
+			if ( is_array( $location ) ) {
+				if ( array_key_exists( 'latitude', $location ) ) {
+					$commentdata['comment_meta']['geo_latitude'] = $location['latitude'];
+				}
+				if ( array_key_exists( 'longitude', $location ) ) {
+					$commentdata['comment_meta']['geo_longitude'] = $location['longitude'];
+				}
+				if ( array_key_exists( 'name', $location ) ) {
+					$commentdata['comment_meta']['geo_address'] = $location['name'];
+				}
+			} else {
+				if ( substr( $location, 0, 4 ) == 'geo:' ) {
+					$geo = explode( ':', substr( urldecode( $location ), 4 ) );
+					$geo = explode( ';', $geo[0] );
+					$coords = explode( ',', $geo[0] );
+					$commentdata['comment_meta']['geo_latitude'] = trim( $coords[0] );
+					$commentdata['comment_meta']['geo_longitude'] = trim( $coords[1] );
+				} else {
+					$commentdata['comment_meta']['geo_address'] = $location;
+				}
+			}
+		}
+
 		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment' );
 		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
 		foreach ( $properties as $key => $value ) {
@@ -208,7 +261,9 @@ class Linkbacks_MF2_Handler {
 
 	public static function get_property( $key, $properties ) {
 		if ( isset( $properties[ $key ] ) && isset( $properties[ $key ][0] ) ) {
-			$properties[ $key ] = array_unique( $properties[ $key ] );
+			if ( is_array( $properties[ $key ] ) ) {
+				$properties[ $key ] = array_unique( $properties[ $key ] );
+			}
 			if ( 1 === count( $properties[ $key ] ) ) {
 				return $properties[ $key ][0];
 			}
@@ -265,34 +320,6 @@ class Linkbacks_MF2_Handler {
 			}
 		}
 		return array_filter( $flat );
-	}
-
-	/**
-	 * helper to find the correct author node
-	 *
-	 * @param array $mf_array the parsed microformats array
-	 * @param string $source the source url
-	 *
-	 * @return array|null the h-card node or null
-	 */
-	public static function get_representative_author( $mf_array, $source ) {
-		foreach ( $mf_array['items'] as $mf ) {
-			if ( isset( $mf['type'] ) ) {
-				if ( in_array( 'h-card', $mf['type'] ) ) {
-					// check domain
-					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
-						foreach ( $mf['properties']['url'] as $url ) {
-							if ( wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( $source, PHP_URL_HOST ) ) {
-								return $mf['properties'];
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 
 	/**
@@ -353,6 +380,47 @@ class Linkbacks_MF2_Handler {
 		// Not Sure What This Is
 		return false;
 	}
+
+	/**
+	 * helper to find the correct author node
+	 *
+	 * @param array $mf_array the parsed microformats array
+	 * @param string $source the source url
+	 *
+	 * @return array|null the h-card node or null
+	 */
+	public static function get_representative_author( $mf_array, $source ) {
+		// some basic checks
+		if ( ! is_array( $mf_array ) ) {
+			return false;
+		}
+		if ( ! isset( $mf_array['items'] ) ) {
+			return false;
+		}
+		$items = $mf_array['items'];
+		if ( 0 === count( $items ) ) {
+			return false;
+		}
+		foreach ( $mf_array['items'] as $mf ) {
+			if ( isset( $mf['type'] ) ) {
+				if ( in_array( 'h-feed', $mf['type'] ) ) {
+					if ( array_key_exists( 'author', $mf['properties'] ) ) {
+						return self::flatten_microformats( $mf['properties']['author'] );
+					}
+				}
+				if ( in_array( 'h-card', $mf['type'] ) ) {
+					return self::flatten_microformats( $mf );
+				}
+			}
+		}
+		if ( isset( $mf_array['rels']['author'] ) ) {
+			return $mf_array['rels']['author'];
+		}
+
+		return null;
+	}
+
+
 
 	/**
 	 * check entry classes or document rels for post-type

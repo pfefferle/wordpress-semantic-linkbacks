@@ -61,7 +61,7 @@ class MF2_Debugger {
 				'comment_meta',
 				'target',
 				'remote_source_rels',
-				'remote_source_properties'
+				'remote_source_properties',
 			) );
 			status_header( 200 );
 			echo '<pre>';
