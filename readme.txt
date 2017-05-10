@@ -3,8 +3,8 @@ Contributors: pfefferle, dshanske
 Donate link: http://14101978.de
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
 Requires at least: 4.7
-Tested up to: 4.7.2
-Stable tag: 3.3.0
+Tested up to: 4.7.4
+Stable tag: 3.4.0
 
 Richer Comments and Linkbacks for WordPress!
 
@@ -29,7 +29,7 @@ to enhance linkbacks. The plugin is most useful with webmention support(separate
 
 = What about the semantic "comment" types? =
 
-The IndieWeb community defines several types of feedback:
+The IndieWeb community defines several types of feedback supported by this plugin:
 
 * Replies: <http://indieweb.org/replies>
 * Reposts: <http://indieweb.org/repost>
@@ -37,6 +37,8 @@ The IndieWeb community defines several types of feedback:
 * Favorites: <http://indieweb.org/favorite>
 * RSVPs: <http://indieweb.org/rsvp>
 * Tagging: <http://indieweb.org/tag>
+* Bookmarks: <http://indieweb.org/bookmark>
+* Quote: <http://indieweb.org/quotation>
 * Classic "Mentions": <http://indieweb.org/mentions>
 
 = How do I extend this plugin? =
@@ -51,7 +53,8 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
-= 3.3.2 = 
+
+= 3.4.0 = 
 * fixed misclassification of types as mention
 * rewrote interpreter code to expand beyond h-entry parsing
 * mf2 properties now stored in comment meta
