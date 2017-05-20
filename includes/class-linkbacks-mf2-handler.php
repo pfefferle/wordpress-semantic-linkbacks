@@ -330,7 +330,14 @@ class Linkbacks_MF2_Handler {
 				$flat[ $key ] = esc_url_raw( $value );
 			}
 		}
-		return array_filter( $flat );
+		// If name and URL are the same, remove name.
+		if ( array_key_exists( 'name', $flat ) && array_key_exists( 'url', $flat ) ) {
+			if ( $flat['name'] === $flat['url'] ) {
+				unset( $flat['name'] );
+			}
+		}
+		$flat = array_filter( $flat );
+		return $flat;
 	}
 
 	/**
@@ -450,9 +457,9 @@ class Linkbacks_MF2_Handler {
 			// check u-* params
 			if ( in_array( $key, array_keys( $classes ) ) ) {
 				// check "normal" links
-				//	if ( self::compare_urls( $target, $values ) ) {
+					if ( self::compare_urls( $target, $values ) ) {
 					return $classes[ $key ];
-				//	}
+					}
 
 				// iterate in-reply-tos
 				foreach ( $values as $obj ) {
@@ -492,6 +499,22 @@ class Linkbacks_MF2_Handler {
 		return 'mention';
 	}
 
+	public static function array_flatten( $array ) {
+		$return = array();
+		if ( ! is_array( $array ) ) {
+			$return[] = $array;
+		}
+		foreach ($array as $key => $value) {
+			if ( is_array( $value ) ) {
+				$return = array_merge( $return, array_flatten( $value ) );
+			}
+			else {
+				$return[$key] = $value;
+			}
+	   }
+	   return $return;
+	}
+
 	/**
 	 * compare an url with a list of urls
 	 *
@@ -502,6 +525,8 @@ class Linkbacks_MF2_Handler {
 	 * @return boolean
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
+		// Flattening as a precaution due to the fact multidimensional arrays have been passed to this function.
+		$haystack = self::array_flatten( $haystack );
 		if ( ! self::is_url( $needle ) ) {
 			return false;
 		}
