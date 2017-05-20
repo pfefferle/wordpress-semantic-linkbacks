@@ -63,10 +63,9 @@ class MF2_Debugger {
 				'remote_source_rels',
 				'remote_source_properties',
 			) );
+			header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 			status_header( 200 );
-			echo '<pre>';
-			print_r( $commentdata );
-			echo '</pre>';
+			echo wp_json_encode( $commentdata );
 			exit;
 
 		}
