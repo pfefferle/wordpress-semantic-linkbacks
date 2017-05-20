@@ -263,7 +263,11 @@ class Linkbacks_MF2_Handler {
 
 	public static function convert_time( $time ) {
 		$time = strtotime( $time );
-		return get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+		// If it can't read the time it will return null which will mean the comment time will be set to now.
+		if ( $time ) {
+			return get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+		}
+		return null;
 	}
 
 	public static function get_property( $key, $properties ) {
