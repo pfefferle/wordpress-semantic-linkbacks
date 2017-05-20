@@ -362,8 +362,12 @@ class Linkbacks_MF2_Handler {
 		}
 
 		if ( 1 === count( $items ) ) {
-			// return first item
-			return $items[0];
+			$items = $items[0];
+			if ( ! in_array( 'h-feed', $items['type'] ) ) {
+				return $items;
+			}
+			// Otherwise if it is an h-feed then check the entries in the h-feed to match.
+			$items = $items['children'];
 		}
 
 		// Else look for the top level item that matches the URL
@@ -372,9 +376,7 @@ class Linkbacks_MF2_Handler {
 			if ( array_key_exists( 'url', $item['properties'] ) ) {
 				$urls = $item['properties']['url'];
 				if ( self::compare_urls( $target, $urls ) ) {
-					if ( ! in_array( 'h-feed', $item['type'] ) ) {
-						return $item;
-					}
+					return $item;
 				}
 			}
 		}
