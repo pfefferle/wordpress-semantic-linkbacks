@@ -184,6 +184,9 @@ class Linkbacks_MF2_Handler {
 				if ( isset( $properties['name'] ) ) {
 					$commentdata['comment_author'] = wp_slash( $author['name'] );
 				}
+				if ( isset( $author['properties']['name'] ) && empty( $commentdata['comment_author'] ) ){
+					$commentdata['comment_author'] = wp_slash( $author['properties']['name'][0] );
+				}
 
 				if ( isset( $author['email'] ) ) {
 					$commentdata['comment_author_email'] = wp_slash( $author['email'] );
