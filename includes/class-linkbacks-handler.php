@@ -16,7 +16,7 @@ class Linkbacks_Handler {
 		// enhance linkbacks
 		add_filter( 'preprocess_comment', array( 'Linkbacks_Handler', 'enhance' ), 0, 1 );
 		// Since currently wp_update_comment_data filters out comment meta using alternate update method.
-		add_action( 'edit_webmention', array( 'Linkbacks_Handler', 'enhance' ), 10, 2 );
+		add_action( 'edit_webmention', array( 'Linkbacks_Handler', 'update' ), 10, 2 );
 		add_action( 'edit_webmention', array( 'Linkbacks_Handler', 'update_meta' ), 11, 2 );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
@@ -74,6 +74,10 @@ class Linkbacks_Handler {
 			'show_in_rest' => true,
 		);
 		register_meta( 'comment', 'semantic_linkbacks_type', $args );
+	}
+
+	public static function update( $comment_id, $commentdata ) {
+		return self::enhance( $commentdata );
 	}
 
 	/**
