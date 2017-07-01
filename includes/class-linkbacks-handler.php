@@ -15,10 +15,9 @@ class Linkbacks_Handler {
 	public static function init() {
 		// enhance linkbacks
 		add_filter( 'preprocess_comment', array( 'Linkbacks_Handler', 'enhance' ), 0, 1 );
-		add_filter( 'wp_update_comment_data', array( 'Linkbacks_Handler', 'enhance' ), 11, 3 );
-
-		// Updates Comment Meta if set in commentdata
-		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
+		// Since currently wp_update_comment_data filters out comment meta using alternate update method.
+		add_action( 'edit_webmention', array( 'Linkbacks_Handler', 'enhance' ), 10, 2 );
+		add_action( 'edit_webmention', array( 'Linkbacks_Handler', 'update_meta' ), 11, 2 );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
@@ -81,11 +80,6 @@ class Linkbacks_Handler {
 	 * Update an Enhanced Comment
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
-		if ( ! empty( $commentarr ) ) {
-			// add pre-processed data from, for example the Webmention plugin
-			$commentdata = array_merge( $commentdata, $commentarr );
-		}
-
 		// check if comment is a linkback
 		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
 			return $commentdata;
@@ -371,15 +365,9 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function pre_get_avatar_data( $args, $id_or_email ) {
-		if ( ! isset( $args['class'] ) ) {
-			$args['class'] = array( 'u-photo' );
-		} else {
-			$args['class'][] = 'u-photo';
-		}
-
-		if ( ! is_object( $id_or_email ) ||
+		if ( ! $id_or_email instanceof WP_Comment ||
 			! isset( $id_or_email->comment_type ) ||
-			! get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', true ) ) {
+				   $id_or_email->user_id ) {
 			return $args;
 		}
 
@@ -387,6 +375,12 @@ class Linkbacks_Handler {
 		$avatar = get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', true );
 
 		if ( $avatar ) {
+			if ( ! isset( $args['class'] ) ) {
+				$args['class'] = array( 'u-photo' );
+			} else {
+				$args['class'][] = 'u-photo';
+				$args['class'] = array_unique( $args['class'] );
+			}
 			$args['url'] = $avatar;
 			$args['class'][] = 'avatar-semantic-linkbacks';
 		}
