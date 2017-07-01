@@ -4,7 +4,7 @@ Donate link: http://14101978.de
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
 Requires at least: 4.7
 Tested up to: 4.8
-Stable tag: 3.4.0
+Stable tag: 3.4.1
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -52,6 +52,12 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 == Changelog ==
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+= 3.4.1 =
+
+* Update Avatar Code to Not Override if there is a set user ID
+* As only webmentions support updates move hook to new edit_webmention to avoid limitation in core hook
+* Remove duplicate slashing
 
 = 3.4.0 =
 
