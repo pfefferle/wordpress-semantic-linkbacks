@@ -267,6 +267,12 @@ class Linkbacks_MF2_Handler {
 		$whitelist = apply_filters( 'semantic_linkbacks_mf2_props_whitelist', $whitelist );
 		foreach ( $properties as $key => $value ) {
 			if ( in_array( $key, $whitelist ) ) {
+				if ( self::is_url( $value ) ) {
+					$value = esc_url_raw( $value );
+				}
+				if ( is_string( $value ) ) {
+					$value = wp_kses_post( $value );
+				}
 				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
 			}
 		}
