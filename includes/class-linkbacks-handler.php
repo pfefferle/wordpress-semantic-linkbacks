@@ -81,11 +81,6 @@ class Linkbacks_Handler {
 	 * Update an Enhanced Comment
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
-		if ( ! empty( $commentarr ) ) {
-			// add pre-processed data from, for example the Webmention plugin
-			$commentdata = array_merge( $commentdata, $commentarr );
-		}
-
 		// check if comment is a linkback
 		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
 			return $commentdata;
