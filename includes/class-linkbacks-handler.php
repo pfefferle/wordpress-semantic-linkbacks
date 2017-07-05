@@ -371,26 +371,23 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function pre_get_avatar_data( $args, $id_or_email ) {
-		if ( ! isset( $args['class'] ) ) {
-			$args['class'] = array( 'u-photo' );
-		} else {
-			$args['class'][] = 'u-photo';
-		}
-
-		if ( ! is_object( $id_or_email ) ||
+		if ( ! $id_or_email instanceof WP_Comment ||
 			! isset( $id_or_email->comment_type ) ||
-			! get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', true ) ) {
+				   $id_or_email->user_id ) {
 			return $args;
 		}
-
 		// check if comment has an avatar
 		$avatar = get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', true );
-
 		if ( $avatar ) {
+			if ( ! isset( $args['class'] ) ) {
+				$args['class'] = array( 'u-photo' );
+			} else {
+				$args['class'][] = 'u-photo';
+				$args['class'] = array_unique( $args['class'] );
+			}
 			$args['url'] = $avatar;
 			$args['class'][] = 'avatar-semantic-linkbacks';
 		}
-
 		return $args;
 	}
 
