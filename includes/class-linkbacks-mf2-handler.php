@@ -251,10 +251,22 @@ class Linkbacks_MF2_Handler {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
 		}
-		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment', 'bridgy-omit-link' );
-		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
+		$whitelist = array( 
+			'author', 
+			'location',  
+			'syndication', 
+			'uid', 
+			'video',
+			'audio',
+			'photo',
+			'featured'
+		);
+
+		// Add in supported properties
+		$whitelist = array_merge( $whitelist, array_keys( MF2_Handler::get_class_mapper() ) );
+		$whitelist = apply_filters( 'semantic_linkbacks_mf2_props_whitelist', $whitelist );
 		foreach ( $properties as $key => $value ) {
-			if ( ! in_array( $key, $blacklist ) ) {
+			if ( in_array( $key, $whitelist ) ) {
 				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
 			}
 		}
