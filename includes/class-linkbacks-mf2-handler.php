@@ -192,7 +192,12 @@ class Linkbacks_MF2_Handler {
 				}
 
 				if ( isset( $author['url'] ) ) {
-					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+					if ( in_array( $commentdata['comment_type'], array( 'webmention', '' ) ) ) {
+						$commentdata['comment_author_url'] = $author['url'];
+					}
+					else {
+						$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+					}
 				}
 
 				if ( isset( $author['photo'] ) ) {
