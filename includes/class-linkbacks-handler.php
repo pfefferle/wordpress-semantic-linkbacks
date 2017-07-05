@@ -110,9 +110,10 @@ class Linkbacks_Handler {
 			$commentdata['target'] = add_query_arg( array( 'replytocom' => $commentdata['comment_parent'] ), $commentdata['target'] );
 		}
 
-		// add source url as comment-meta
-		$commentdata['comment_meta']['semantic_linkbacks_source'] = esc_url_raw( $commentdata['comment_author_url'] );
-
+		// add source url as comment-meta for pingbacks and trackbacks
+		if ( ! array_key_exists( 'webmention_source_url', $commentdata['comment_meta'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_source'] = esc_url_raw( $commentdata['comment_author_url'] );
+		}
 		// adds a hook to enable some other semantic handlers for example schema.org
 		$commentdata = apply_filters( 'semantic_linkbacks_commentdata', $commentdata );
 
@@ -245,17 +246,20 @@ class Linkbacks_Handler {
 	 */
 	public static function get_url( $comment = null ) {
 		// get canonical url...
-		$semantic_linkbacks_canonical = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
+		$url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
 		// ...or fall back to source
-		if ( ! $semantic_linkbacks_canonical ) {
-			$semantic_linkbacks_canonical = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_source', true );
+		if ( ! $url && in_array( $comment->comment_type, array( 'webmention', '' ) ) ) {
+			$url = get_comment_meta( $comment->comment_ID, 'webmention_source_url' );
+		}
+		if ( ! $url ) {
+			$url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_source', true );
 		}
 		// ...or author url
-		if ( ! $semantic_linkbacks_canonical ) {
-			$semantic_linkbacks_canonical = $comment->comment_author_url;
+		if ( ! $url ) {
+			$url = $comment->comment_author_url;
 		}
 
-		return $semantic_linkbacks_canonical;
+		return $url;
 	}
 
 	/**
@@ -420,11 +424,21 @@ class Linkbacks_Handler {
 	 * @return string the replaced/parsed author url or the original comment link
 	 */
 	public static function get_comment_author_url( $url, $id, $comment ) {
-		if ( $author_url = get_comment_meta( $id, 'semantic_linkbacks_author_url', true ) ) {
-			return $author_url;
+		$author_url = get_comment_meta( $id, 'semantic_linkbacks_author_url', true );
+		if ( ! $author_url ) {
+			return $url;
 		}
-
-		return $url;
+		if ( get_comment_meta( $id, 'webmention_source_url' ) ) {
+			wp_update_comment( 
+				array(
+					'comment_ID' => $id,
+					'comment_author_url' => $author_url
+				)
+			);
+			delete_comment_meta( $id, 'semantic_linkbacks_author_url' );
+			delete_comment_meta( $id, 'semantic_linkbacks_source' );
+		}
+		return $author_url;
 	}
 
 	/**
