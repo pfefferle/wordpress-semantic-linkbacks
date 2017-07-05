@@ -81,9 +81,17 @@ class Linkbacks_Handler {
 	 * Update an Enhanced Comment
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
-		// check if comment is a linkback
-		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
-			return $commentdata;
+		// If $comment is empty this is a new comment
+		if ( empty( $comment ) ) {
+			if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
+			       return $commentdata;
+			}
+		}
+		else {
+			// For an update the only acceptable types are webmention or comment
+			if ( ! in_array( $comment['comment_type'], array( 'webmention', '' ) ) ) {
+				return $commentdata;
+			}
 		}
 
 		// only run the enhancer if `remote_source_original` is set
@@ -142,7 +150,7 @@ class Linkbacks_Handler {
 
 	/**
 	 * Save Meta - to Match the core functionality in wp_insert_comment.
-	 * To be Removed if This Functionality Hits Core.
+	 * To be Removed in WordPress 4.9.
 	 *
 	 * @param array $commentdata The new comment data
 	 * @param array $comment The old comment data
@@ -283,7 +291,7 @@ class Linkbacks_Handler {
 		}
 
 		$url = self::get_url( $comment );
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = wp_parse_url( $url, PHP_URL_HOST );
 
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
