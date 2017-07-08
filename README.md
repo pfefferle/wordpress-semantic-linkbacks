@@ -4,7 +4,7 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.7.1  
 **Tested up to:** 4.8  
-**Stable tag:** 3.4.0  
+**Stable tag:** 3.4.1  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -52,6 +52,16 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.4.1 ###
+* Update Avatar Code to not override local user data
+* Add support for storing the author URL in proper place
+* Turn whitelist into blacklist for mf2 properties
+* Sanitize mf2 url properties
+* No longer store source in two places if webmention
+* Remove merge between slashed and unslashed data as 4.7.1 update now slices array after filter
+* Remove compatibility function and require 4.7.1 minimum
+* Only run function on update if webmention and no longer try to update other linkbacks due no protocol support
 
 ### 3.4.0 ###
 
