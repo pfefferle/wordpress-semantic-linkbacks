@@ -193,7 +193,12 @@ class Linkbacks_MF2_Handler {
 				}
 
 				if ( isset( $author['url'] ) ) {
-					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+					if ( in_array( $commentdata['comment_type'], array( 'webmention', '' ) ) ) {
+						$commentdata['comment_author_url'] = $author['url'];
+					}
+					else {
+						$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+					}
 				}
 
 				if ( isset( $author['photo'] ) ) {
@@ -247,10 +252,28 @@ class Linkbacks_MF2_Handler {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
 		}
-		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment', 'bridgy-omit-link' );
-		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
+		$whitelist = array( 
+			'author', 
+			'location',  
+			'syndication', 
+			'uid', 
+			'video',
+			'audio',
+			'photo',
+			'featured'
+		);
+
+		// Add in supported properties
+		$whitelist = array_merge( $whitelist, array_keys( MF2_Handler::get_class_mapper() ) );
+		$whitelist = apply_filters( 'semantic_linkbacks_mf2_props_whitelist', $whitelist );
 		foreach ( $properties as $key => $value ) {
-			if ( ! in_array( $key, $blacklist ) ) {
+			if ( in_array( $key, $whitelist ) ) {
+				if ( self::is_url( $value ) ) {
+					$value = esc_url_raw( $value );
+				}
+				if ( is_string( $value ) ) {
+					$value = wp_kses_post( $value );
+				}
 				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
 			}
 		}
