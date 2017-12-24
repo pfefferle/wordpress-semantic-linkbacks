@@ -222,7 +222,7 @@ class Linkbacks_Handler {
 			// translators: Name verb on domain
 			'rsvp:tracking' => __( '%1$s <strong>tracks</strong> this event.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'invited'  => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
+			'invited'       => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -248,7 +248,7 @@ class Linkbacks_Handler {
 			'rsvp:no'       => __( 'RSVP', 'semantic-linkbacks' ),
 			'rsvp:maybe'    => __( 'RSVP', 'semantic-linkbacks' ),
 			'rsvp:tracking' => __( 'RSVP', 'semantic-linkbacks' ),
-			'invited'  => __( 'Invited', 'semantic-linkbacks' ),
+			'invited'       => __( 'Invited', 'semantic-linkbacks' ),
 		);
 
 		return $strings;

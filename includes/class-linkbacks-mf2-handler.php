@@ -71,7 +71,6 @@ class Linkbacks_MF2_Handler {
 		 */
 		$class_mapper['invited'] = 'invitee';
 
-
 		/*
 		 * tag
 		 * @link http://indiewebcamp.com/tag
@@ -252,7 +251,7 @@ class Linkbacks_MF2_Handler {
 		if ( isset( $properties['rsvp'] ) ) {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . self::first( $properties['rsvp'] ) );
 		} elseif ( isset( $properties['invitee'] ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = 'invited';	
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = 'invited';
 		} else {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
@@ -267,7 +266,7 @@ class Linkbacks_MF2_Handler {
 			'audio',
 			'photo',
 			'featured',
-			'swarm-coins'
+			'swarm-coins',
 		);
 
 		// Add in supported properties
