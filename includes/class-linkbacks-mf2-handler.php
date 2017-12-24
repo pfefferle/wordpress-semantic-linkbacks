@@ -257,6 +257,7 @@ class Linkbacks_MF2_Handler {
 			'audio',
 			'photo',
 			'featured',
+			'swarm-coins'
 		);
 
 		// Add in supported properties
