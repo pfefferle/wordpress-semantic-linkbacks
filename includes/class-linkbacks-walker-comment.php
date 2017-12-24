@@ -85,7 +85,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		$host = preg_replace( '/^www\./', '', $host );
 
 ?>
-		<<?php echo $tag; ?> id="comment-<?php comment_ID(); ?>" <?php comment_class( $this->has_children ? 'parent' : '', $comment ); ?>>
+		<<?php echo $tag; ?> id="comment-<?php comment_ID(); ?>" <?php comment_class( 'u-comment h-cite' . ( $this->has_children ? ' parent' : '' ), $comment ); ?>>
 			<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 				<footer class="comment-meta">
 					<div class="comment-author vcard h-card u-author">
