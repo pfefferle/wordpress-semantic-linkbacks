@@ -66,6 +66,13 @@ class Linkbacks_MF2_Handler {
 		$class_mapper['rsvp'] = 'rsvp';
 
 		/*
+		 * invited
+		 * @link http://indiewebcamp.com/invitation
+		 */
+		$class_mapper['invited'] = 'invitee';
+
+
+		/*
 		 * tag
 		 * @link http://indiewebcamp.com/tag
 		 */
@@ -152,9 +159,10 @@ class Linkbacks_MF2_Handler {
 		$commentdata['comment_date_gmt'] = get_gmt_from_date( $commentdata['comment_date'] );
 
 		$author = null;
-
-		// check if h-card has an author
-		if ( isset( $properties['author'] ) ) {
+		if ( isset( $properties['invitee'] ) ) {
+			$author = $properties['invitee'];
+		} elseif ( isset( $properties['author'] ) ) {
+			// check if h-card has an author
 			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
@@ -243,6 +251,8 @@ class Linkbacks_MF2_Handler {
 		// check rsvp property
 		if ( isset( $properties['rsvp'] ) ) {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . self::first( $properties['rsvp'] ) );
+		} elseif ( isset( $properties['invitee'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = 'invited';	
 		} else {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
