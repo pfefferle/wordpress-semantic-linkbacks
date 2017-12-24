@@ -34,7 +34,6 @@ class Linkbacks_Handler {
 		add_filter( 'get_comment_link', array( 'Linkbacks_Handler', 'get_comment_link' ), 99, 3 );
 		add_filter( 'get_comment_author_url', array( 'Linkbacks_Handler', 'get_comment_author_url' ), 99, 3 );
 		add_filter( 'get_avatar_comment_types', array( 'Linkbacks_Handler', 'get_avatar_comment_types' ) );
-		add_filter( 'comment_class', array( 'Linkbacks_Handler', 'comment_class' ), 10, 4 );
 		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
 		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
 
@@ -549,44 +548,6 @@ class Linkbacks_Handler {
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Add comment classes from `semantic_linkbacks_type`s
-	 *
-	 * @return array the extended comment classes as array
-	 */
-	public static function comment_class( $classes, $class, $comment_id, $post_id ) {
-		// get comment
-		$comment = get_comment( $comment_id );
-
-		// "comment type to class" mapper
-		$class_mapping = array(
-			'mention'       => array( 'h-as-mention' ),
-
-			'reply'         => array( 'h-as-reply' ),
-			'repost'        => array( 'h-as-repost', 'p-repost' ),
-			'like'          => array( 'h-as-like', 'p-like' ),
-			'favorite'      => array( 'h-as-favorite', 'p-favorite' ),
-			'tag'           => array( 'h-as-tag', 'p-tag' ),
-			'bookmark'      => array( 'h-as-bookmark', 'p-bookmark' ),
-			'rsvp:yes'      => array( 'h-as-rsvp' ),
-			'rsvp:no'       => array( 'h-as-rsvp' ),
-			'rsvp:maybe'    => array( 'h-as-rsvp' ),
-			'rsvp:invited'  => array( 'h-as-rsvp' ),
-			'rsvp:tracking' => array( 'h-as-rsvp' ),
-		);
-
-		$semantic_linkbacks_type = self::get_type( $comment );
-
-		// check the comment type
-		if ( $semantic_linkbacks_type && isset( $class_mapping[ $semantic_linkbacks_type ] ) ) {
-			$classes = array_merge( $classes, $class_mapping[ $semantic_linkbacks_type ] );
-
-			$classes = array_unique( $classes );
-		}
-
-		return $classes;
 	}
 
 	/**
