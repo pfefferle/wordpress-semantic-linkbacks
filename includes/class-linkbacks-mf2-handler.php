@@ -264,7 +264,7 @@ class Linkbacks_MF2_Handler {
 		// Check for person tagging
 		if ( isset( $properties['category'] ) ) {
 			if ( in_array( $commentdata['target'], $properties['category'], true ) ) {
-				$commentdata['category'] = $commentdata['target'];
+				$commentdata['category'] = array( $commentdata['target'] ); 
 			}
 		}
 
