@@ -388,7 +388,7 @@ class Linkbacks_Handler {
 		} else {
 			// If this isn't a post then use the singular name of the post type converted to lowercase
 			$post_type_object = get_post_type_object( get_post_type( $comment->comment_post_ID ) );
-			$post_type        = $post_type_object->singular_name;
+			$post_type        = sprintf( __( 'this %1s', 'semantic-linkbacks' ), $post_type_object->singular_name );
 			if ( $comment->comment_post_ID === get_option( 'webmention_home_mentions', 0 ) ) {
 				// If this is the homepage use the site name
 				$post_type = get_bloginfo( 'name' );

@@ -11,6 +11,7 @@ class RenderingTest extends WP_UnitTestCase {
 	}
 
 	public function make_comments( $num, $semantic_linkbacks_type = 'like' ) {
+		$id = wp_insert_post(['post_title'=>'Some Post']);
 		$comments = array();
 		for ( $i = 0; $i < $num; $i++ ) {
 			$id = wp_new_comment(
@@ -18,6 +19,7 @@ class RenderingTest extends WP_UnitTestCase {
 					'comment_author_url' => 'http://example.com/person' . $i,
 					'comment_author'     => 'Person ' . $i,
 					'comment_type'       => 'webmention',
+					'comment_post_ID'    => $id
 				)
 			);
 			add_comment_meta( $id, 'semantic_linkbacks_type', $semantic_linkbacks_type );
