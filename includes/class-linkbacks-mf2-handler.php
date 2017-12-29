@@ -74,7 +74,8 @@ class Linkbacks_MF2_Handler {
 		 * tag
 		 * @link http://indiewebcamp.com/tag
 		 */
-		$class_mapper['tag-of'] = 'tag';
+		$class_mapper['tag-of']   = 'tag';
+		$class_mapper['category'] = 'tag';
 
 		return apply_filters( 'semantic_linkbacks_microformats_class_mapper', $class_mapper );
 	}
@@ -260,6 +261,13 @@ class Linkbacks_MF2_Handler {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'invite' );
 		}
 
+		// Check for person tagging
+		if ( isset( $properties['category'] ) ) {
+			if ( in_array( $commentdata['target'], $properties['category'], true ) ) {
+				$commentdata['category'] = $commentdata['target'];
+			}
+		}
+
 		$whitelist = array(
 			'author',
 			'location',
@@ -269,7 +277,7 @@ class Linkbacks_MF2_Handler {
 			'audio',
 			'photo',
 			'featured',
-			'swarm-coins' // https://ownyourswarm.p3k.io/docs#coins
+			'swarm-coins', // https://ownyourswarm.p3k.io/docs#coins
 		);
 
 		// Add in supported properties

@@ -110,11 +110,11 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 					<div class="comment-metadata">
 					<?php
-						if ( $coins ) {
-							// translators: Number of Swarm Coins
-							printf( _n( '+%d coin', '+%d coins', (int) $coins, 'semantic-linkbacks' ), $coins );
-							echo ' / ';
-						}
+					if ( $coins ) {
+						// translators: Number of Swarm Coins
+						printf( _n( '+%d coin', '+%d coins', (int) $coins, 'semantic-linkbacks' ), $coins );
+						echo ' / ';
+					}
 					?>
 
 
