@@ -373,20 +373,27 @@ class Linkbacks_Handler {
 	}
 
 	public static function get_post_type( $comment ) {
-		if ( ! current_theme_supports( 'post-formats' ) ) {
-			$post_format = 'standard';
-		} else {
-			$post_format = get_post_format( $comment->comment_post_ID );
-			// add "standard" as default
-			if ( ! $post_format || ! in_array( $post_format, array_keys( self::get_post_format_strings() ), true ) ) {
+		if ( 'post' === get_post_type( $comment->comment_post_ID ) ) {	
+			if ( ! current_theme_supports( 'post-formats' ) ) {
 				$post_format = 'standard';
+			} else {
+				$post_format = get_post_format( $comment->comment_post_ID );
+				// add "standard" as default
+				if ( ! $post_format || ! in_array( $post_format, array_keys( self::get_post_format_strings() ), true ) ) {
+					$post_format = 'standard';
+				}
+			}
+			$post_formatstrings = self::get_post_format_strings();
+			$post_type          = $post_formatstrings[ $post_format ];
+		} else {
+			// If this isn't a post then use the singular name of the post type converted to lowercase
+			$post_type_object = get_post_type_object( get_post_type( $comment->comment_post_ID ) );
+			$post_type = $post_type_object->singular_name;
+			if ( $comment->comment_post_ID === get_option( 'webmention_home_mentions', 0 ) ) {
+				// If this is the homepage use the site name
+				$post_type = get_bloginfo( 'name' );
 			}
 		}
-
-		// get post type
-		$post_formatstrings = self::get_post_format_strings();
-		$post_type          = $post_formatstrings[ $post_format ];
-
 		return apply_filters( 'semantic_linkbacks_post_type', $post_type, $comment->comment_post_ID );
 	}
 
