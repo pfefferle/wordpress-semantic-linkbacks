@@ -70,6 +70,8 @@ Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks]
 
 = 3.7.4 =
 * Replace `rsvp-invite` property which is not in use with `invite` property and add unit tests
+* Support different post types and homepage mentions in comment excerpt
+* Add basic person tagging support
 
 = 3.7.3 =
 
