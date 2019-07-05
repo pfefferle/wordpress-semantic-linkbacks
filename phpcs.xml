@@ -7,7 +7,7 @@
 	<exclude-pattern>*/includes/*\.(inc|css|js|svg)</exclude-pattern>
 	<rule ref="PHPCompatibility"/>
 	<rule ref="PHPCompatibilityWP" />
-	<config name="minimum_supported_wp_version" value="4.7"/>
+	<config name="minimum_supported_wp_version" value="4.8"/>
 	<rule ref="WordPress.WP.DeprecatedFunctions" />
 	<config name="testVersion" value="5.4-"/>
 	<rule ref="WordPress-Core">
