@@ -1,9 +1,4 @@
-<?php $facepiles = get_option( 'semantic_linkbacks_facepiles' );
-if ( ! is_array( $facepiles ) ) {
-	$facepiles = array_keys( Linkbacks_Handler::get_comment_type_strings() );
-}
-
-?>
+<?php $facepiles = get_option( 'semantic_linkbacks_facepiles', array() ); ?>
 <?php if ( in_array( 'reacji', $facepiles, true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
 <div class="reactions">
 	<h3><?php echo __( 'Reacjis', 'semantic-linkbacks' ); ?></h3>
