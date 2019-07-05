@@ -84,6 +84,7 @@ class RenderingTest extends WP_UnitTestCase {
 		);
 		add_comment_meta( $id, 'semantic_linkbacks_avatar', 'http://example.com/photo' );
 		Semantic_Linkbacks_Walker_Comment::$reactions = array( get_comment( $id ) );
+		add_option( 'semantic_linkbacks_facepiles', array( 'reacji' ) );
 
 		ob_start();
 		load_template( dirname( __FILE__ ) . '/../templates/linkbacks.php', false );
