@@ -1,7 +1,7 @@
 <?php
 /**
  * Comment walker subclass that skips facepile webmention comments and stores
- * emoji reactions (https://indieweb.org/reacj).
+ * emoji reactions (https://indieweb.org/reacji).
  *
  * Based on https://codex.wordpress.org/Function_Reference/Walker_Comment
  */
