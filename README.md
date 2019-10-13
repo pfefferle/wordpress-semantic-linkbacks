@@ -1,5 +1,5 @@
 # Semantic-Linkbacks #
-**Contributors:** pfefferle, dshanske  
+**Contributors:** [pfefferle](https://profiles.wordpress.org/pfefferle), [dshanske](https://profiles.wordpress.org/dshanske)  
 **Donate link:** https://notiz.blog/donate/  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
