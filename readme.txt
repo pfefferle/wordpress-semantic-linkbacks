@@ -5,7 +5,7 @@ Tags: webmention, pingback, trackback, linkback, microformats, comments, indiewe
 Requires at least: 4.8.2
 Requires PHP: 5.4
 Tested up to: 5.2.2
-Stable tag: 3.9.3
+Stable tag: 3.10.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 

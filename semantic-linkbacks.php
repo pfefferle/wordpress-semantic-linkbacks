@@ -5,7 +5,7 @@
  * Description: Semantic Linkbacks for WebMentions, Trackbacks and Pingbacks
  * Author: Matthias Pfefferle
  * Author URI: https://notiz.blog/
- * Version: 3.9.3
+ * Version: 3.10.0
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: semantic-linkbacks
@@ -23,7 +23,7 @@ add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
  * @author Matthias Pfefferle
  */
 class Semantic_Linkbacks_Plugin {
-	public static $version = '3.9.3';
+	public static $version = '3.10.0';
 	/**
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
@@ -36,8 +36,10 @@ class Semantic_Linkbacks_Plugin {
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php';
 		require_once dirname( __FILE__ ) . '/includes/functions.php';
 
-		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-avatar-handler.php';
-		add_action( 'init', array( 'Linkbacks_Avatar_Handler', 'init' ) );
+		if ( ! class_exists( 'Webmention_Avatar_Handler' ) ) {
+			require_once dirname( __FILE__ ) . '/includes/class-linkbacks-avatar-handler.php';
+			add_action( 'init', array( 'Linkbacks_Avatar_Handler', 'init' ) );
+		}
 
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php';
 		add_action( 'init', array( 'Linkbacks_Handler', 'init' ) );

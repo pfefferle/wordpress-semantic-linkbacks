@@ -30,7 +30,7 @@ class RenderingTest extends WP_UnitTestCase {
 				)
 			);
 			add_comment_meta( $id, 'semantic_linkbacks_type', $semantic_linkbacks_type );
-			add_comment_meta( $id, 'semantic_linkbacks_avatar', 'http://example.com/photo' );
+			add_comment_meta( $id, 'avatar', 'http://example.com/photo' );
 			$comments[] = get_comment( $id );
 		}
 		return $comments;
@@ -82,7 +82,7 @@ class RenderingTest extends WP_UnitTestCase {
 				'comment_content'    => '😢',  // 'crying face' emoji
 			)
 		);
-		add_comment_meta( $id, 'semantic_linkbacks_avatar', 'http://example.com/photo' );
+		add_comment_meta( $id, 'avatar', 'http://example.com/photo' );
 		Semantic_Linkbacks_Walker_Comment::$reactions = array( get_comment( $id ) );
 		add_option( 'semantic_linkbacks_facepiles', array( 'reacji' ) );
 

@@ -87,10 +87,10 @@ class Linkbacks_Handler {
 		if ( ! empty( $_POST['semantic_linkbacks_type'] ) ) {
 			update_comment_meta( $comment_id, 'semantic_linkbacks_type', $_POST['semantic_linkbacks_type'] );
 		}
-		if ( ! empty( $_POST['semantic_linkbacks_avatar'] ) ) {
-			update_comment_meta( $comment_id, 'semantic_linkbacks_avatar', $_POST['semantic_linkbacks_avatar'] );
+		if ( ! empty( $_POST['avatar'] ) ) {
+			update_comment_meta( $comment_id, 'avatar', $_POST['avatar'] );
 		} else {
-			delete_comment_meta( $comment_id, 'semantic_linkbacks_avatar' );
+			delete_comment_meta( $comment_id, 'avatar' );
 		}
 	}
 
@@ -147,7 +147,7 @@ class Linkbacks_Handler {
 			'single'            => true,
 			'show_in_rest'      => true,
 		);
-		register_meta( 'comment', 'semantic_linkbacks_avatar', $args );
+		register_meta( 'comment', 'avatar', $args );
 
 		$args = array(
 			'sanitize_callback' => 'esc_url_raw',

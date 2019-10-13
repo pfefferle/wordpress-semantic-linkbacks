@@ -1,0 +1,7 @@
+{
+  "comment_author": "basic-reply",
+  "comment_author_url": "http://example.com/webmention/target/placeholder",
+  "comment_meta": {
+    "semantic_linkbacks_type": "reply"
+  }
+}
