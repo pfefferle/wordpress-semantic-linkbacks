@@ -36,7 +36,14 @@ class Linkbacks_Avatar_Handler {
 		if ( is_numeric( $comment ) ) {
 			$comment = get_comment( $comment );
 		}
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+
+		$avatar = get_comment_meta( $comment->comment_ID, 'avatar', true );
+		// Backward Compatibility for Semantic Linkbacks
+		if ( ! $avatar ) {
+			$avatar = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+		}
+
+		return $avatar;
 	}
 
 
@@ -105,9 +112,9 @@ class Linkbacks_Avatar_Handler {
 		if ( $id_or_email instanceof WP_Comment ) {
 			if ( ! empty( $id_or_email->comment_author_email ) ) {
 				if ( self::check_gravatar( $id_or_email ) ) {
-					update_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', $args['url'] );
+					update_comment_meta( $id_or_email->comment_ID, 'avatar', $args['url'] );
 				} else {
-					update_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', self::get_default_avatar() );
+					update_comment_meta( $id_or_email->comment_ID, 'avatar', self::get_default_avatar() );
 					$args['url'] = self::get_default_avatar();
 				}
 				return $args;
