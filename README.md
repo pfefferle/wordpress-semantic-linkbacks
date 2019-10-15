@@ -86,6 +86,10 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.10.0 ###
+
+* use Webmentions avatar-handler if available
+
 ### 3.9.3 ###
 
 * Fixes https://github.com/pfefferle/wordpress-semantic-linkbacks/issues/41
