@@ -234,7 +234,7 @@ class Linkbacks_MF2_Handler {
 				}
 
 				if ( isset( $author['email'] ) ) {
-                    $potential_email = self::first( wp_parse_url( $author['email'], PHP_URL_PATH ) );
+                    $potential_email = wp_parse_url( self::first(  $author['email'] ), PHP_URL_PATH );
                     if ( filter_var($email, FILTER_VALIDATE_EMAIL) ) {
                         $commentdata['comment_author_email'] = wp_slash( $potential_email );
                     }
