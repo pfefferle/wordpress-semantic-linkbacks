@@ -305,7 +305,7 @@ Please look at the <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Sc
 				<wp:meta_value><![CDATA[https://checkmention.appspot.com/]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[https://checkmention.appspot.com/static/img/q.jpg]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
@@ -360,7 +360,7 @@ the name or title should not raise an alert.]]></wp:comment_content>
 				<wp:meta_value><![CDATA[]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[https://checkmention.appspot.com/static/img/q.jpg]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
@@ -416,7 +416,7 @@ the name or title should not raise an alert.]]></wp:comment_content>
 				<wp:meta_value><![CDATA[http://twitter.com/muhh]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[https://pbs.twimg.com/profile_images/419417667704205312/OZ3sBz_o_normal.jpeg]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
@@ -478,7 +478,7 @@ the name or title should not raise an alert.]]></wp:comment_content>
 				<wp:meta_value><![CDATA[http://aaronparecki.com/]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[http://aaronparecki.com/images/aaronpk.png]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
@@ -535,7 +535,7 @@ Wer sein eigenes Bridgy betreiben will… der Code ist Open Source!]]></wp:comme
 				<wp:meta_value><![CDATA[https://notizblog.org/author/matthias-pfefferle/]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[https://secure.gravatar.com/avatar/b36983a5651df2c413e264ad4d5cc1a1?s=40&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40&r=G]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
@@ -717,7 +717,7 @@ Feel free to use this post as a test. Mark up your blog with h-entry, write a po
 				<wp:meta_value><![CDATA[http://tantek.com/]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[http://tantek.com/logo.jpg]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
@@ -783,7 +783,7 @@ Feel free to use this post as a test. Mark up your blog with h-entry, write a po
 				<wp:meta_value><![CDATA[http://voxpelli.com/]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>
-				<wp:meta_key><![CDATA[semantic_linkbacks_avatar]]></wp:meta_key>
+				<wp:meta_key><![CDATA[avatar]]></wp:meta_key>
 				<wp:meta_value><![CDATA[http://voxpelli.com/avatar.jpg]]></wp:meta_value>
 			</wp:commentmeta>
 			<wp:commentmeta>

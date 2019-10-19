@@ -242,7 +242,7 @@ class Linkbacks_MF2_Handler {
 				}
 
 				if ( isset( $author['photo'] ) ) {
-					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = self::first( $author['photo'] );
+					$commentdata['comment_meta']['avatar'] = self::first( $author['photo'] );
 				}
 			}
 		}
