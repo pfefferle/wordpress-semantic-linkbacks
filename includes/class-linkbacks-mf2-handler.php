@@ -139,13 +139,17 @@ class Linkbacks_MF2_Handler {
 		} else { // Fallback to comment author url.
 			$source = $commentdata['comment_author_url'];
 		}
-		if ( ! class_exists( 'Mf2\Parser' ) ) {
-			require_once plugin_dir_path( __DIR__ ) . 'vendor/mf2/mf2/Mf2/Parser.php';
-		}
 
-		// parse source html
-		$parser   = new Parser( $commentdata['remote_source_original'], $source );
-		$mf_array = $parser->parse( true );
+		if ( ! array_key_exists( 'remote_source_mf2', $commentdata ) ) {
+			if ( ! class_exists( 'Mf2\Parser' ) ) {
+				require_once plugin_dir_path( __DIR__ ) . 'vendor/mf2/mf2/Mf2/Parser.php';
+			}
+
+			// parse source html
+			$parser                           = new Parser( $commentdata['remote_source_original'], $source );
+			$commentdata['remote_source_mf2'] = $parser->parse( true );
+		}
+		$mf_array = $commentdata['remote_source_mf2'];
 
 		// check for rel-alternate links
 		$alternate_source = self::get_alternate_source( $mf_array );
@@ -167,6 +171,7 @@ class Linkbacks_MF2_Handler {
 			return array();
 		}
 
+		// Discard everything but the representative entry
 		$commentdata['remote_source_mf2']        = $entry;
 		$properties                              = array_filter( self::flatten_microformats( $entry ) );
 		$commentdata['remote_source_properties'] = $properties;
