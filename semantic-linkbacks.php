@@ -12,7 +12,7 @@
  * Requires PHP: 5.4
  */
 
-add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ) );
+add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ), 11 );
 
 // initialize admin settings
 add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
