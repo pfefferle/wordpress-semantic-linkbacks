@@ -12,7 +12,7 @@
  * Requires PHP: 5.4
  */
 
-add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ) );
+add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ), 11 );
 
 // initialize admin settings
 add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
@@ -61,7 +61,7 @@ class Semantic_Linkbacks_Plugin {
 
 	public static function admin_init() {
 		self::privacy_declaration();
-		$page = class_exists( 'Webmention_Plugin' ) ? 'webmention' : 'discussion';
+		$page = function_exists( 'webmention_init' ) ? 'webmention' : 'discussion';
 		add_settings_section(
 			'semantic-linkbacks',
 			__( 'Semantic Linkbacks Settings', 'semantic-linkbacks' ),
@@ -99,7 +99,7 @@ class Semantic_Linkbacks_Plugin {
 	}
 
 	public static function register_settings() {
-		$option_group = class_exists( 'Webmention_Plugin' ) ? 'webmention' : 'discussion';
+		$option_group = function_exists( 'webmention_init' ) ? 'webmention' : 'discussion';
 		register_setting(
 			$option_group,
 			'semantic_linkbacks_facepiles',
