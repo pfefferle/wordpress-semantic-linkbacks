@@ -2,8 +2,8 @@
 Contributors: pfefferle, dshanske
 Donate link: https://notiz.blog/donate/
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
-Requires at least: 4.8.2
-Requires PHP: 5.4
+Requires at least: 4.9
+Requires PHP: 5.6
 Tested up to: 5.3.2
 Stable tag: 3.10.1
 License: MIT
