@@ -9,7 +9,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	public static $reactions = array();
 
 	protected static function should_facepile( $comment ) {
-		$facepiles = get_option( 'semantic_linkbacks_facepiles', array() );
+		$facepiles = get_option( 'semantic_linkbacks_facepiles', array_keys( Linkbacks_Handler::get_comment_type_strings() ) );
 
 		if ( self::is_reaction( $comment ) && in_array( 'reaction', $facepiles, true ) ) {
 			return true;
