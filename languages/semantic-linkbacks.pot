@@ -1,267 +1,370 @@
-# Copyright (C) 2018 Matthias Pfefferle
+# Copyright (C) 2020 Matthias Pfefferle
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Semantic-Linkbacks 3.8.0\n"
+"Project-Id-Version: Semantic-Linkbacks 3.10.1\n"
 "Report-Msgid-Bugs-To: "
-"https://wordpress.org/support/plugin/semantic-linkbacks\n"
-"POT-Creation-Date: 2018-06-18 21:51:00+00:00\n"
+"https://wordpress.org/support/plugin/wordpress-semantic-linkbacks\n"
+"POT-Creation-Date: 2020-04-07 12:37:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: includes/class-linkbacks-handler.php:63
+#: includes/class-linkbacks-avatar-handler.php:23
+msgid "Mystery Person (hosted locally)"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:57
 msgid "Semantic Linkbacks Data"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:107
-msgid "Anonymous (hosted locally)"
-msgstr ""
-
-#: includes/class-linkbacks-handler.php:277
+#: includes/class-linkbacks-handler.php:274
 #. translators: Name verb on domain
 msgid "%1$s mentioned %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:279
+#: includes/class-linkbacks-handler.php:276
 #. translators: Name verb on domain
 msgid "%1$s replied to %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:281
+#: includes/class-linkbacks-handler.php:278
 #. translators: Name verb on domain
 msgid "%1$s reposted %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:283
+#: includes/class-linkbacks-handler.php:280
 #. translators: Name verb on domain
 msgid "%1$s liked %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:285
+#: includes/class-linkbacks-handler.php:282
 #. translators: Name verb on domain
 msgid "%1$s favorited %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:287
+#: includes/class-linkbacks-handler.php:284
 #. translators: Name verb on domain
 msgid "%1$s tagged %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:289
+#: includes/class-linkbacks-handler.php:286
 #. translators: Name verb on domain
 msgid "%1$s bookmarked %2$s on <a href=\"%3$s\">%4$s</a>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:291
+#: includes/class-linkbacks-handler.php:288
 #. translators: Name verb on domain
 msgid "%1$s is <strong>attending</strong>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:293
+#: includes/class-linkbacks-handler.php:290
 #. translators: Name verb on domain
 msgid "%1$s is <strong>not attending</strong>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:295
+#: includes/class-linkbacks-handler.php:292
 #. translators: Name verb on domain
 msgid "Maybe %1$s will be <strong>attending</strong>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:297
+#: includes/class-linkbacks-handler.php:294
 #. translators: Name verb on domain
 msgid "%1$s is <strong>interested</strong> in this event."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:299
+#: includes/class-linkbacks-handler.php:296
 #. translators: Name verb on domain
 msgid "%1$s is <strong>invited</strong>."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:301
+#: includes/class-linkbacks-handler.php:298
 #. translators: Name verb on domain
 msgid "%1$s <strong>listened</strong> to %2$s (via <a href=\"%3$s\">%4$s</a>)."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:303
+#: includes/class-linkbacks-handler.php:300
 #. translators: Name verb on domain
 msgid "%1$s <strong>watched</strong> %2$s (via <a href=\"%3$s\">%4$s</a>)."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:305
+#: includes/class-linkbacks-handler.php:302
 #. translators: Name verb on domain
 msgid "%1$s <strong>read</strong> %2$s (via <a href=\"%3$s\">%4$s</a>)."
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:319
+#: includes/class-linkbacks-handler.php:304
+#. translators: Name verb on domain
+msgid "%1$s <strong>followed</strong> %2$s (via <a href=\"%3$s\">%4$s</a>)."
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:320
 msgid "Mention"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:321
+#: includes/class-linkbacks-handler.php:322
 msgid "Reply"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:322
+#: includes/class-linkbacks-handler.php:323
 msgid "Repost"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:323
+#: includes/class-linkbacks-handler.php:324
 msgid "Like"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:324
+#: includes/class-linkbacks-handler.php:325
 msgid "Favorite"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:325
+#: includes/class-linkbacks-handler.php:326
 msgid "Tag"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:326
+#: includes/class-linkbacks-handler.php:327
 msgid "Bookmark"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:327
 #: includes/class-linkbacks-handler.php:328
-#: includes/class-linkbacks-handler.php:329
-#: includes/class-linkbacks-handler.php:330
-msgid "RSVP"
+msgid "RSVP Yes"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:331 templates/linkbacks.php:148
+#: includes/class-linkbacks-handler.php:329
+msgid "RSVP No"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:330
+msgid "RSVP Maybe"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:331
+msgid "RSVP Interested"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:332 templates/linkbacks.php:161
 msgid "Invited"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:332
+#: includes/class-linkbacks-handler.php:333
 msgid "Listen"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:333
+#: includes/class-linkbacks-handler.php:334
 msgid "Watch"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:334
+#: includes/class-linkbacks-handler.php:335
 msgid "Read"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:360
-msgid "this Post"
+#: includes/class-linkbacks-handler.php:336
+msgid "Follow"
 msgstr ""
 
-#: includes/class-linkbacks-handler.php:361
-msgid "this Page"
-msgstr ""
-
-#: includes/class-linkbacks-handler.php:363
-msgid "this Article"
-msgstr ""
-
-#: includes/class-linkbacks-handler.php:364
-msgid "this Aside"
+#: includes/class-linkbacks-handler.php:337
+msgid "Reacji"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:365
-msgid "this Chat"
+msgid "this Post"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:366
-msgid "this Gallery"
-msgstr ""
-
-#: includes/class-linkbacks-handler.php:367
-msgid "this Link"
+msgid "this Page"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:368
-msgid "this Image"
+msgid "this Article"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:369
-msgid "this Quote"
+msgid "this Aside"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:370
-msgid "this Status"
+msgid "this Chat"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:371
-msgid "this Video"
+msgid "this Gallery"
 msgstr ""
 
 #: includes/class-linkbacks-handler.php:372
+msgid "this Link"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:373
+msgid "this Image"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:374
+msgid "this Quote"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:375
+msgid "this Status"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:376
+msgid "this Video"
+msgstr ""
+
+#: includes/class-linkbacks-handler.php:377
 msgid "this Audio"
 msgstr ""
 
-#: includes/class-linkbacks-walker-comment.php:101
+#: includes/class-linkbacks-notifications.php:34
+msgid "Resend Comment Email"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:35
+msgid "Resend Moderation Email"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:37
+msgid "Send Pushover Note"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:40
+msgid "Send Pushbullet Note"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:102
+#. translators: Comment moderation. 1: Comment action URL
+msgid "Approve it: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:105
+#. translators: Trash it URL
+msgid "Trash it: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:108
+#. translators: Delete it URL
+msgid "Delete it: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:111
+#. translators: Spam it URL
+msgid "Spam it: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:131
+#. translators: 1: blog name, 2: Semantic Linkbacks type, 3: post title
+msgid "[%1$s] %2$s: %3$s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:185
+#. translators: Comment moderation notification email subject. 1: Site name, 2:
+#. Semantic Linkbacks type, 3: Post title
+msgid "[%1$s] Please moderate a %2$s: %3$s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:203
+#. translators: 1: website name, 2: website URL
+msgid "Author: %1$1s(%2$2s) "
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:205
+#. translators: Semantic Linkback comment type string
+msgid "Semantic Type: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:207
+#. translators: URL
+msgid "URL: %s "
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:209
+#. translators: Comment Text
+msgid "Text: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:211
+#. translators: 1. Post Permalink
+msgid "You can see all responses to this post here: %1s#comments"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:213
+#. translators: Comment Permalink
+msgid "Permalink: %s"
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:231
+#. translators: 1. Semantic Linkbacks type, 2. Post Title
+msgid "New %1$1s on your post \"%2$2s\""
+msgstr ""
+
+#: includes/class-linkbacks-notifications.php:247
+#. translators: 1. Semantic Linkbacks type, 2. Post Title
+msgid "A new %1$1s on the post \"%2$2s\" is waiting for your approval"
+msgstr ""
+
+#: includes/class-linkbacks-walker-comment.php:104
 #. translators: %s: comment author link
 msgid "%s <span class=\"says\">says:</span>"
 msgstr ""
 
-#: includes/class-linkbacks-walker-comment.php:115
+#: includes/class-linkbacks-walker-comment.php:118
 #. translators: Number of Swarm Coins
 msgid "+%d coin"
 msgid_plural "+%d coins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-linkbacks-walker-comment.php:126
+#: includes/class-linkbacks-walker-comment.php:129
 #. translators: 1: comment date, 2: comment time
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: includes/class-linkbacks-walker-comment.php:130
+#: includes/class-linkbacks-walker-comment.php:133
 msgid "Edit"
 msgstr ""
 
-#: includes/class-linkbacks-walker-comment.php:134
+#: includes/class-linkbacks-walker-comment.php:137
 msgid "Your response is awaiting moderation."
 msgstr ""
 
-#: semantic-linkbacks.php:58
+#: semantic-linkbacks.php:67
 msgid "Semantic Linkbacks Settings"
 msgstr ""
 
-#: semantic-linkbacks.php:62
-msgid "Facepile Mentions"
+#: semantic-linkbacks.php:73
+msgid ""
+"Automatically embed facepiles <small>(may not work on all themes)</small> "
+"for:"
 msgstr ""
 
-#: semantic-linkbacks.php:70
-msgid "Facepile Reposts"
+#: semantic-linkbacks.php:80
+msgid "Initial number of faces to show in facepiles <small>(0 for all)</small>"
 msgstr ""
 
-#: semantic-linkbacks.php:78
-msgid "Facepile Likes"
-msgstr ""
-
-#: semantic-linkbacks.php:86
-msgid "Facepile Reactions (emoji)"
-msgstr ""
-
-#: semantic-linkbacks.php:94
-msgid "Facepile Favorite"
-msgstr ""
-
-#: semantic-linkbacks.php:102
-msgid "Facepile Tags"
-msgstr ""
-
-#: semantic-linkbacks.php:110
-msgid "Facepile Bookmarks"
+#: semantic-linkbacks.php:108
+msgid "Types to show in Facepiles"
 msgstr ""
 
 #: semantic-linkbacks.php:118
-msgid "Facepile RSVPs"
-msgstr ""
-
-#: semantic-linkbacks.php:126
 msgid "Initial number of faces to show in facepiles"
 msgstr ""
 
-#: semantic-linkbacks.php:161
+#: semantic-linkbacks.php:137
+msgid ""
+"For webmentions that do not have avatars you can pick from several locally "
+"served default avatars in the Discussion Settings"
+msgstr ""
+
+#: semantic-linkbacks.php:141
+msgid ""
+"This server does not have the php-mbstring package installed and Emoji "
+"reactions have been disabled."
+msgstr ""
+
+#: semantic-linkbacks.php:159
 msgid ""
 "For received webmentions, pingbacks and trackbacks, such as responding to a "
 "post or article, this site stores information retrieved from the source\n"
@@ -270,64 +373,6 @@ msgid ""
 "are\n"
 "\t\t\t\tsolely to provide richer comments. We will remove any of this on "
 "request."
-msgstr ""
-
-#: templates/discussion-settings.php:3
-msgid ""
-"Automatically embed facepiles <small>(may not work on all themes)</small> "
-"for:"
-msgstr ""
-
-#: templates/discussion-settings.php:7 templates/linkbacks.php:199
-msgid "Mentions"
-msgstr ""
-
-#: templates/discussion-settings.php:11 templates/linkbacks.php:59
-msgid "Reposts"
-msgstr ""
-
-#: templates/discussion-settings.php:15 templates/linkbacks.php:17
-msgid "Likes"
-msgstr ""
-
-#: templates/discussion-settings.php:19
-msgid "Reactions (emoji)"
-msgstr ""
-
-#: templates/discussion-settings.php:23
-msgid "Favorites"
-msgstr ""
-
-#: templates/discussion-settings.php:27 templates/linkbacks.php:73
-msgid "Tags"
-msgstr ""
-
-#: templates/discussion-settings.php:31 templates/linkbacks.php:45
-msgid "Bookmarks"
-msgstr ""
-
-#: templates/discussion-settings.php:35
-msgid "Invites"
-msgstr ""
-
-#: templates/discussion-settings.php:39
-msgid "Listens"
-msgstr ""
-
-#: templates/discussion-settings.php:43
-msgid "Watches"
-msgstr ""
-
-#: templates/discussion-settings.php:47 templates/linkbacks.php:133
-msgid "RSVPs"
-msgstr ""
-
-#: templates/discussion-settings.php:51
-msgid "Reads"
-msgstr ""
-
-#: templates/discussion-settings.php:58
-msgid "Initial number of faces to show in facepiles <small>(0 for all)</small>"
 msgstr ""
 
 #: templates/linkbacks-edit-comment-form.php:2
@@ -346,40 +391,68 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: templates/linkbacks.php:3
+#: templates/linkbacks.php:4
 msgid "Reacjis"
 msgstr ""
 
-#: templates/linkbacks.php:31
+#: templates/linkbacks.php:18
+msgid "Likes"
+msgstr ""
+
+#: templates/linkbacks.php:32
 msgid "Favourites"
 msgstr ""
 
-#: templates/linkbacks.php:87
+#: templates/linkbacks.php:46
+msgid "Bookmarks"
+msgstr ""
+
+#: templates/linkbacks.php:60
+msgid "Reposts"
+msgstr ""
+
+#: templates/linkbacks.php:74
+msgid "Tags"
+msgstr ""
+
+#: templates/linkbacks.php:88
 msgid "Listening"
 msgstr ""
 
-#: templates/linkbacks.php:101
+#: templates/linkbacks.php:102
 msgid "Reading"
 msgstr ""
 
-#: templates/linkbacks.php:117
+#: templates/linkbacks.php:116
+msgid "Following"
+msgstr ""
+
+#: templates/linkbacks.php:130
 msgid "Watching"
 msgstr ""
 
-#: templates/linkbacks.php:136
+#: templates/linkbacks.php:146
+msgid "RSVPs"
+msgstr ""
+
+#: templates/linkbacks.php:149
 msgid "Yes"
 msgstr ""
 
-#: templates/linkbacks.php:160
+#: templates/linkbacks.php:173
 msgid "Maybe"
 msgstr ""
 
-#: templates/linkbacks.php:172
+#: templates/linkbacks.php:185
 msgid "No"
 msgstr ""
 
-#: templates/linkbacks.php:184
-msgid "Tracking"
+#: templates/linkbacks.php:197
+msgid "Interested"
+msgstr ""
+
+#: templates/linkbacks.php:212
+msgid "Mentions"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
