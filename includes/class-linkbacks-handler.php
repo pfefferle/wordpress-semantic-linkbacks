@@ -205,7 +205,7 @@ class Linkbacks_Handler {
 		if ( isset( $commentdata['comment_meta']['semantic_linkbacks_type'] ) ) {
 			if ( in_array( $commentdata['comment_meta']['semantic_linkbacks_type'], apply_filters( 'semantic_linkbacks_comment_types', array( 'reply' ) ), true ) ) {
 				// https://core.trac.wordpress.org/ticket/49236 - As of WP5.5, comment will be the default comment type, not empty.
-				$commentdata['comment_type'] = version_compare( get_bloginfo( 'version'), '5.5', '>=' ) ) ? 'comment' : '';
+				$commentdata['comment_type'] = version_compare( get_bloginfo( 'version'), '5.5', '>=' ) ? 'comment' : '';
 			}
 		}
 
