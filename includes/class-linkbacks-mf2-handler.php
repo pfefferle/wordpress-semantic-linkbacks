@@ -348,7 +348,7 @@ class Linkbacks_MF2_Handler {
 		$time = strtotime( $time );
 		// If it can't read the time it will return null which will mean the comment time will be set to now.
 		if ( $time ) {
-			return get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+			return get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
 		}
 		return null;
 	}

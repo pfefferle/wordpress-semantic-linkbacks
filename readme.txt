@@ -2,9 +2,9 @@
 Contributors: pfefferle, dshanske
 Donate link: https://notiz.blog/donate/
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
-Requires at least: 4.8.2
-Requires PHP: 5.4
-Tested up to: 5.4.0
+Requires at least: 4.9
+Requires PHP: 5.6
+Tested up to: 5.4.2
 Stable tag: 3.10.3
 License: MIT
 License URI: http://opensource.org/licenses/MIT
