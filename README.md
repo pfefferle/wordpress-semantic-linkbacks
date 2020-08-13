@@ -4,7 +4,7 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.9  
 **Requires PHP:** 5.6  
-**Tested up to:** 5.4.2  
+**Tested up to:** 5.5  
 **Stable tag:** 3.10.2  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
