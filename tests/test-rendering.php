@@ -78,7 +78,7 @@ class RenderingTest extends WP_UnitTestCase {
 			array(
 				'comment_author_url' => 'http://example.com/person',
 				'comment_author'     => 'Person',
-				'comment_type'       => '',
+				'comment_type'       => 'comment',
 				'comment_content'    => '😢',  // 'crying face' emoji
 			)
 		);
