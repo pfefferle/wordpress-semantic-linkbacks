@@ -5,7 +5,7 @@ Tags: webmention, pingback, trackback, linkback, microformats, comments, indiewe
 Requires at least: 4.9
 Requires PHP: 5.6
 Tested up to: 5.5
-Stable tag: 3.10.2
+Stable tag: 3.10.3
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -85,6 +85,10 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 == Changelog ==
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+= 3.10.3 =
+
+* Use `comment` as default comment-type: https://core.trac.wordpress.org/ticket/49236
 
 = 3.10.2 =
 
