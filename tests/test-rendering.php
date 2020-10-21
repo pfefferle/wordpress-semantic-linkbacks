@@ -55,7 +55,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Post on example.com."' );
 		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Post on example.com."' );
 		$person_2 = strpos( $html, 'additional-facepile' );
-		$ellipsis = strpos( $html, '<li class="toggle-additional-facepiles">' );
+		$ellipsis = strpos( $html, '<button class="show-additional-facepiles">' );
 		$this->assertGreaterThan( 0, $person_0 );
 		$this->assertGreaterThan( $person_0, $person_1 );
 		$this->assertGreaterThan( $person_1, $person_2 );
