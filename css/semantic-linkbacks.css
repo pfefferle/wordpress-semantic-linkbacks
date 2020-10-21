@@ -14,7 +14,12 @@
 	display: none;
 }
 
-.mention-list .toggle-additional-facepiles {
+.mention-list.initialized .additional-facepile,
+.mention-list .additional-facepile-button-list-item {
+	display: none;
+}
+
+.mention-list.initialized .additional-facepile-button-list-item:not(.is-hidden) {
 	display: inline-block;
 	text-align: center;
 	height: 64px;
@@ -22,6 +27,16 @@
 	line-height: 1.5;
 	font-size: 32px;
 	cursor: pointer;
+}
+
+.mention-list.initialized .additional-facepile-button-list-item.is-hidden ~ .additional-facepile {
+	display: inline-block;
+}
+
+.mention-list .additional-facepile-button-list-item button {
+	border: none;
+	background-color: transparent;
+	padding: 0;
 }
 
 .mention-list li img {

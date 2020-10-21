@@ -181,9 +181,37 @@ function list_linkbacks( $args, $comments ) {
 	$return  = sprintf( '<%1$s class="%2$s">', $r['style'], join( ' ', $r['style-class'] ) );
 	$fold_at = (int) get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
 
+	$type_labels = [
+		'reacji' => __( 'Reacjis', 'semantic-linkbacks' ),
+		'like' => __( 'Likes', 'semantic-linkbacks' ),
+		'favorite' => __( 'Favourites', 'semantic-linkbacks' ),
+		'bookmark' => __( 'Bookmarks', 'semantic-linkbacks' ),
+		'repost' => __( 'Reposts', 'semantic-linkbacks' ),
+		'tag' => __( 'Tags', 'semantic-linkbacks' ),
+		'listen' => __( 'Listening', 'semantic-linkbacks' ),
+		'read' => __( 'Reading', 'semantic-linkbacks' ),
+		'follow' => __( 'Following', 'semantic-linkbacks' ),
+		'watch' => __( 'Watching', 'semantic-linkbacks' ),
+		'rsvp-yes' => __( 'RSVPs', 'semantic-linkbacks' ),
+		'invited' => __( 'Invited', 'semantic-linkbacks' ),
+		'rsvp-maybe' => __( 'Maybe', 'semantic-linkbacks' ),
+		'rsvp-no' => __( 'No', 'semantic-linkbacks' ),
+		'rsvp-interested' => __( 'Interested', 'semantic-linkbacks' ),
+		'mention' => __( 'Mentions', 'semantic-linkbacks' ),
+	];
+
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i === $fold_at ) {
 			$classes[] = 'additional-facepile';
+
+			// Add show button.
+			$return .= sprintf(
+				'<li class="additional-facepile-button-list-item"><button class="show-additional-facepiles"><span aria-hidden="true">&hellip;</span><span class="screen-reader-text">%s</span></button></li>',
+				sprintf( /* translators: s=Linback type */
+					__( 'Show more %s', 'semantic-linkbacks' ),
+					$type_labels[$r['type']]
+				)
+			);
 		}
 
 		// If it's an emoji reaction, overlay the emoji.
@@ -227,7 +255,14 @@ function list_linkbacks( $args, $comments ) {
 	}
 
 	if ( $fold_at && count( $comments ) > $fold_at ) {
-		$return .= '<li class="toggle-additional-facepiles">&hellip;</li>';
+		// Add hide button at end.
+		$return .= sprintf(
+			'<li class="additional-facepile-button-list-item is-hidden"><button class="hide-additional-facepiles"><span aria-hidden="true">&hellip;</span><span class="screen-reader-text">%s</span></button></li>',
+			sprintf( /* translators: s=Linback type */
+				__( 'Show fewer %s', 'semantic-linkbacks' ),
+				$type_labels[$r['type']]
+			)
+		);
 	}
 
 	$return .= sprintf( '</%1$s>', $r['style'] );
