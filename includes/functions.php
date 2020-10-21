@@ -208,7 +208,7 @@ function list_linkbacks( $args, $comments ) {
 			$return .= sprintf(
 				'<li class="additional-facepile-button-list-item"><button class="show-additional-facepiles"><span aria-hidden="true">&hellip;</span><span class="screen-reader-text">%s</span></button></li>',
 				sprintf( /* translators: s=Linback type */
-					__( 'Show more %s'),
+					__( 'Show more %s', 'semantic-linkbacks' ),
 					$type_labels[$r['type']]
 				)
 			);
@@ -259,7 +259,7 @@ function list_linkbacks( $args, $comments ) {
 		$return .= sprintf(
 			'<li class="additional-facepile-button-list-item is-hidden"><button class="hide-additional-facepiles"><span aria-hidden="true">&hellip;</span><span class="screen-reader-text">%s</span></button></li>',
 			sprintf( /* translators: s=Linback type */
-				__( 'Show fewer %s'),
+				__( 'Show fewer %s', 'semantic-linkbacks' ),
 				$type_labels[$r['type']]
 			)
 		);
