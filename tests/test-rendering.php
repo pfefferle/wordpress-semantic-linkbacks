@@ -41,7 +41,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$this->assertStringMatchesFormat(
 			'<ul class="mention-list linkback-mention"><li class="webmention even thread-even depth-1 linkback-mention-single u-like h-cite" id="comment-2">
 				<span class="p-author h-card">
-					<a class="u-url" title="Person 0 liked this Post on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> </a>
+					<a class="u-url" title="Person 0 liked this Post on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' loading=\'lazy\'/> </a>
 					<span class="hide-name p-name">Person 0</span>
 				</span>
 				<a class="u-url" href=""></a>
@@ -96,7 +96,7 @@ class RenderingTest extends WP_UnitTestCase {
 	<h3>Reacjis</h3>
 	<ul class="mention-list linkback-reacji"><li class="comment even thread-even depth-1 linkback-reacji-single h-cite" id="comment-%d">
 				<span class="p-author h-card">
-					<a class="u-url" title="Person 😢 on example.com." href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> <span class="emoji-overlay">😢</span></a>
+					<a class="u-url" title="Person 😢 on example.com." href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' loading=\'lazy\'/> <span class="emoji-overlay">😢</span></a>
 					<span class="hide-name p-name">Person</span>
 				</span>
 				<a class="u-url" href=""></a>
