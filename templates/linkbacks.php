@@ -1,7 +1,7 @@
 <?php $facepiles = get_option( 'semantic_linkbacks_facepiles', array_keys( Linkbacks_Handler::get_comment_type_strings() ) ); 
 
 //	If getting the facepiles hasn't worked, create an empty array to avoid generating errors
-if ( !is_array( $facepiles ) ) {
+if ( ! is_array( $facepiles ) ) {
 	$facepiles = array();
 }
 
