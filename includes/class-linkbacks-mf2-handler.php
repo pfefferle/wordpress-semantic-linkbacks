@@ -157,14 +157,14 @@ class Linkbacks_MF2_Handler {
 		$entries = self::get_entries( $mf_array );
 
 		if ( empty( $entries ) ) {
-			return array();
+			return $commentdata;
 		}
 
 		// get the entry of interest
 		$entry = self::get_representative_entry( $entries, $commentdata['target'] );
 
 		if ( empty( $entry ) ) {
-			return array();
+			return $commentdata;
 		}
 
 		$commentdata['remote_source_mf2']        = $entry;
