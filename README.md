@@ -4,8 +4,8 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.9  
 **Requires PHP:** 5.6  
-**Tested up to:** 5.5  
-**Stable tag:** 3.10.3  
+**Tested up to:** 5.6  
+**Stable tag:** 3.10.4  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -85,6 +85,10 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.10.4 ###
+
+* Remove refbacks as a default. Add a filter to decide on what comment types would be used.
 
 ### 3.10.3 ###
 
