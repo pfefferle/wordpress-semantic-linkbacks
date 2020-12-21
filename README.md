@@ -1,5 +1,5 @@
 # Semantic-Linkbacks #
-**Contributors:** [pfefferle](https://profiles.wordpress.org/pfefferle), [dshanske](https://profiles.wordpress.org/dshanske)  
+**Contributors:** [pfefferle](https://profiles.wordpress.org/pfefferle), [dshanske](https://profiles.wordpress.org/dshanske), [edent](https://profiles.wordpress.org/edent)  
 **Donate link:** https://notiz.blog/donate/  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.9  
@@ -27,7 +27,7 @@ This plugin collects data from sites that send webmentions for the purpose of di
 
 ### Do I need to mark up my site? ###
 
-Most modern WordPress themes support the older Microformats standard, which means the plugin should be able to get basic information from to enhance linkbacks. The plugin is most useful with webmention support(separate plugin) and sites/themes that support Microformats 2.
+Most modern WordPress themes support the older Microformats standard, which means the plugin should be able to get basic information from to enhance linkbacks. The plugin is most useful with the [WordPress Webmention plugin](https://wordpress.org/plugins/webmention/) and sites/themes that support Microformats 2.
 
 ### Why Webmentions? ###
 
