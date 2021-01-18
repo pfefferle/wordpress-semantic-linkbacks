@@ -307,6 +307,6 @@ rather than rerequesting this information.
 
 ## Installation ##
 
-1. Upload the `webmention`-folder to the `/wp-content/plugins/` directory
+1. Upload the `semantic-linkbacks`-folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the *Plugins* menu in WordPress
 3. ...and that's it :)
