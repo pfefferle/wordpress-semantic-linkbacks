@@ -219,7 +219,7 @@ function list_linkbacks( $args, $comments ) {
 		$content = trim( wp_strip_all_tags( $comment->comment_content ) );
 		$title   = Linkbacks_Handler::comment_text_excerpt( '', $comment );
 		if ( Emoji\is_single_emoji( $content ) ) {
-			$overlay = '<span class="emoji-overlay">' . $content . '</span>';
+			$overlay = ' <span class="emoji-overlay">' . $content . '</span>';
 			$url     = wp_parse_url( Linkbacks_Handler::get_url( $comment ), PHP_URL_HOST );
 			$title   = sprintf(
 				'%1$s %2$s on %3$s.',
@@ -236,13 +236,7 @@ function list_linkbacks( $args, $comments ) {
 			$avatar = get_comment_author( $comment );
 		}
 		$return .= sprintf(
-			'<li class="%1$s" id="%5$s">
-				<span class="p-author h-card">
-					<a class="u-url" title="%6$s" href="%3$s">%2$s %8$s</a>
-					<span class="hide-name p-name">%4$s</span>
-				</span>
-				<a class="u-url" href="%7$s"></a>
-			</li>',
+			'<li class="%1$s" id="%5$s"><span class="p-author h-card"><a class="u-url" title="%6$s" href="%3$s">%2$s%8$s</a><span class="hide-name p-name">%4$s</span></span><a class="u-url" href="%7$s"></a></li>',
 			$class,
 			$avatar,
 			get_comment_author_url( $comment ),
