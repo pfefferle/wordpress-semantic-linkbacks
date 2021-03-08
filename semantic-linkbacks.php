@@ -149,7 +149,7 @@ class Semantic_Linkbacks_Plugin {
 	public static function enqueue_scripts() {
 		wp_enqueue_style( 'semantic-linkbacks-css', plugin_dir_url( __FILE__ ) . 'css/semantic-linkbacks.css', array(), self::$version );
 
-		if ( is_singular() && 0 !== (int) get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 ) ) {
+		if ( is_singular() && 0 !== (int) get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 ) && ( ! function_exists( 'is_amp_endpoint' ) || ( function_exists( 'is_amp_endpoint' ) && ! is_amp_endpoint() ) ) ) {
 			wp_enqueue_script( 'semantic-linkbacks', plugin_dir_url( __FILE__ ) . 'js/semantic-linkbacks.js', array(), self::$version, true );
 		}
 	}
