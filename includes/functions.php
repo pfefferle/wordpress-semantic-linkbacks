@@ -179,7 +179,7 @@ function list_linkbacks( $args, $comments ) {
 	$r['style-class'][] = 'linkback-' . $r['type'];
 
 	$return  = sprintf( '<%1$s class="%2$s">', $r['style'], join( ' ', $r['style-class'] ) );
-	$fold_at = (int) get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
+	$fold_at = function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ? 0 : (int) get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
 
 	$type_labels = [
 		'reacji' => __( 'Reacjis', 'semantic-linkbacks' ),
