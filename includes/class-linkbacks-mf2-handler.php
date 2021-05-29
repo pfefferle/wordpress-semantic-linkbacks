@@ -234,7 +234,10 @@ class Linkbacks_MF2_Handler {
 				}
 
 				if ( isset( $author['email'] ) ) {
-					$commentdata['comment_author_email'] = wp_slash( self::first( $author['email'] ) );
+                    $potential_email = wp_parse_url( self::first(  $author['email'] ), PHP_URL_PATH );
+                    if ( filter_var($potential_email, FILTER_VALIDATE_EMAIL) ) {
+                        $commentdata['comment_author_email'] = wp_slash( $potential_email );
+                    }
 				}
 
 				if ( isset( $author['url'] ) ) {
