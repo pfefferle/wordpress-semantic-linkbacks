@@ -2,7 +2,7 @@
   "name": "wordpress-semantic-linkbacks",
   "description": "Semantic Trackbacks/Pingbacks/WebMentions for WordPress!",
   "devDependencies": {
-    "npm": "^6.13.4",
+    "npm": "^7.19.1",
     "grunt": "^1.0.4",
     "grunt-wp-deploy": "^2.0.0",
     "grunt-wp-i18n": "^1.0.3",
