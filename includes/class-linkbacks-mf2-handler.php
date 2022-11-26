@@ -199,7 +199,9 @@ class Linkbacks_MF2_Handler {
 			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
-			$author = self::flatten_microformats( $author );
+			if ( is_array( $author ) ) {
+				$author = self::flatten_microformats( $author );
+			}
 		}
 		// If this is an invite than the invite should be displayed instead of the author
 		if ( isset( $properties['invitee'] ) ) {

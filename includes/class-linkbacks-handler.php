@@ -418,7 +418,11 @@ class Linkbacks_Handler {
 			$comment = get_comment( $comment );
 		}
 		// get canonical url...
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
+		if ( !empty( $comment ) ) {
+			return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
+		} else {
+			return null;
+		}
 	}
 
 	/**
