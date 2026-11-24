@@ -1,6 +1,5 @@
-![project status: inactive](https://img.shields.io/badge/project_status-inactive-red.svg?style=flat)
-
-The plugin was merged into the [Webmention plugin](https://github.com/pfefferle/wordpress-webmention).
+> [!NOTE]
+> This repo is archived and no longer maintained. Semantic Linkbacks was merged into the [Webmention plugin](https://github.com/pfefferle/wordpress-webmention), the code lives on there.
 
 ----
 
